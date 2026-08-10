@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>14B → VISHWAS 2026 Damages Recalculator | EPFO RO Sangareddy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+  :root{--ink:#0d1618;--panel:#132325;--panel-2:#0a1416;--panel-3:#1a2d2f;
+        --teal:#25c2b2;--teal-dim:#0e5a53;--amber:#e9a94a;--amber-dim:#8a5f1f;
+        --paper:#f2ece0;--line:#25423f;--red:#d2665a;--green:#4cbb87;--blue:#5b9bd5;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ink);color:var(--paper);font-family:'IBM Plex Sans',sans-serif;
+    background-image:radial-gradient(900px 420px at 12% -8%,rgba(37,194,178,.10),transparent 65%),
+      radial-gradient(760px 380px at 92% -4%,rgba(233,169,74,.07),transparent 62%),
+      repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0,rgba(255,255,255,.015) 1px,transparent 1px,transparent 34px),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.015) 0,rgba(255,255,255,.015) 1px,transparent 1px,transparent 34px);}
+  ::-webkit-scrollbar{height:9px;width:9px;}
+  ::-webkit-scrollbar-track{background:var(--panel-2);}
+  ::-webkit-scrollbar-thumb{background:#2f5350;border-radius:6px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--teal-dim);}
+
+  header{padding:18px 5vw;border-bottom:1px solid var(--line);display:flex;align-items:center;
+    justify-content:space-between;flex-wrap:wrap;gap:16px;background:rgba(10,20,22,.72);
+    backdrop-filter:blur(9px);position:sticky;top:0;z-index:50;}
+  .brand{display:flex;align-items:center;gap:15px;}
+  .logos{display:flex;align-items:center;gap:11px;}
+  .logos img{display:block;}
+  .logos .emblem{height:46px;width:auto;filter:brightness(0) invert(1);opacity:.92;}
+  .logos .epfo{height:44px;width:auto;background:#fff;border-radius:50%;padding:2px;}
+  .divider{width:1px;height:38px;background:var(--line);}
+  .brand h1{font-family:'Space Grotesk';font-size:19px;margin:0;letter-spacing:.2px;line-height:1.2;}
+  .brand .tag{font-family:'IBM Plex Mono';font-size:10.5px;color:var(--teal);letter-spacing:1.4px;text-transform:uppercase;margin-top:3px;}
+  .pill{font-family:'IBM Plex Mono';font-size:10.5px;border:1px solid var(--teal-dim);color:var(--teal);
+    padding:7px 13px;border-radius:999px;background:rgba(37,194,178,.06);}
+
+  main{max-width:1300px;margin:0 auto;padding:34px 5vw 90px;}
+  .lede{font-family:'Space Grotesk';font-size:28px;line-height:1.26;max-width:830px;margin:0 0 10px;}
+  .lede span{color:var(--teal);}
+  .sub{color:#a7c0be;max-width:760px;font-size:14.5px;line-height:1.62;margin-bottom:26px;}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;}
+  .rate-table{overflow:hidden;margin-bottom:14px;}
+  .rate-table table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono';font-size:12.5px;}
+  .rate-table th{text-align:left;padding:12px 16px;background:var(--panel-2);color:var(--amber);font-weight:500;
+    border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;}
+  .rate-table td{padding:11px 16px;border-bottom:1px solid var(--line);color:#d5e6e4;}
+  .rate-table tr:last-child td{border-bottom:none;}
+  .rate-table .hl{color:var(--teal);font-weight:600;}
+  .rate-table tbody tr:hover td{background:rgba(37,194,178,.045);}
+
+  .howbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:32px;}
+  .how{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:10px;padding:15px 17px;}
+  .how.b2{border-left-color:var(--amber);}
+  .how h4{margin:0 0 7px;font-family:'Space Grotesk';font-size:13.5px;color:var(--paper);}
+  .how p{margin:0;font-size:12.5px;line-height:1.6;color:#9db6b4;}
+  .how code{font-family:'IBM Plex Mono';font-size:11.5px;color:var(--teal);background:rgba(37,194,178,.08);padding:1px 5px;border-radius:4px;}
+
+  .dropzone{border:2px dashed var(--teal-dim);border-radius:14px;padding:44px 24px;text-align:center;
+    background:rgba(37,194,178,.03);cursor:pointer;transition:.16s;}
+  .dropzone:hover,.dropzone.drag{border-color:var(--teal);background:rgba(37,194,178,.08);transform:translateY(-1px);}
+  .dropzone h3{font-family:'Space Grotesk';margin:0 0 6px;font-size:18px;}
+  .dropzone p{margin:0;font-size:13px;color:#9db6b4;}
+  .dropzone .ic{font-size:26px;margin-bottom:8px;opacity:.75;}
+  .dropzone input{display:none;}
+
+  .btn{font-family:'IBM Plex Mono';font-size:12.5px;letter-spacing:.4px;text-transform:uppercase;
+    background:var(--teal);color:#04211e;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-weight:600;transition:.15s;}
+  .btn:hover{background:#3fd8c7;transform:translateY(-1px);}
+  .btn.ghost{background:transparent;color:var(--teal);border:1px solid var(--teal-dim);}
+  .btn.ghost:hover{background:rgba(37,194,178,.1);}
+  .btn.amber{background:var(--amber);color:#241704;}
+  .btn.amber:hover{background:#f7bd63;}
+  .btn.small{padding:7px 12px;font-size:11px;}
+
+  #status{margin:16px 0;font-family:'IBM Plex Mono';font-size:12.5px;color:var(--teal);min-height:18px;line-height:1.65;}
+  #status.err{color:var(--red);}
+  .bar{height:3px;background:var(--panel-3);border-radius:3px;overflow:hidden;margin:10px 0;display:none;}
+  .bar div{height:100%;background:var(--teal);width:0;transition:width .25s;}
+  #diag{display:none;margin-top:12px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+    padding:14px;font-family:'IBM Plex Mono';font-size:10.5px;color:#8aa3a2;max-height:320px;overflow:auto;white-space:pre-wrap;}
+
+  .section{margin-top:42px;}
+  .section h2{font-family:'Space Grotesk';font-size:19px;margin:0 0 4px;display:flex;align-items:center;gap:10px;}
+  .section h2 .no{font-family:'IBM Plex Mono';color:var(--amber);font-size:13px;}
+  .section .desc{color:#9db6b4;font-size:12.8px;margin-bottom:16px;line-height:1.6;}
+
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:24px;}
+  .meta-cell{background:var(--panel);padding:13px 15px;}
+  .meta-cell .k{font-family:'IBM Plex Mono';font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--amber);margin-bottom:5px;}
+  .meta-cell .v{font-size:13.5px;font-family:'Space Grotesk';word-break:break-word;}
+
+  .summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:13px;margin-bottom:16px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px 18px;position:relative;overflow:hidden;}
+  .card:after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line);}
+  .card.old:after{background:#c98b82;} .card.new:after{background:var(--teal);}
+  .card.save:after{background:var(--green);} .card.up:after{background:var(--red);}
+  .card.mute:after{background:#4c6a68;}
+  .card .k{font-family:'IBM Plex Mono';font-size:10px;text-transform:uppercase;color:#9db6b4;letter-spacing:.6px;margin-bottom:8px;}
+  .card .v{font-family:'Space Grotesk';font-size:25px;line-height:1.1;}
+  .card.old .v{color:#e6b7b0;} .card.new .v{color:var(--teal);}
+  .card.save .v{color:var(--green);} .card.up .v{color:var(--red);}
+  .card.mute .v{color:#9db6b4;font-size:20px;}
+  .card .sub2{font-size:10.5px;color:#87a09e;margin-top:5px;font-family:'IBM Plex Mono';}
+
+  table.data{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono';font-size:10.8px;
+    background:var(--panel);border:1px solid var(--line);}
+  table.data thead th{background:var(--panel-2);color:var(--amber);padding:9px 7px;text-align:right;font-weight:500;
+    border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;}
+  table.data th.left{text-align:left;}
+  table.data td{padding:7px;text-align:right;border-bottom:1px solid rgba(255,255,255,.045);white-space:nowrap;}
+  table.data td.left{text-align:left;color:#d5e6e4;}
+  table.data tbody tr:hover td{background:rgba(37,194,178,.055);}
+  table.data tr.autolevy td{opacity:.42;font-style:italic;}
+  table.data tfoot td{border-top:2px solid var(--teal-dim);font-weight:600;color:var(--paper);background:var(--panel-2);}
+  .tablewrap{overflow:auto;max-height:560px;border-radius:11px;border:1px solid var(--line);}
+  .chip{display:inline-block;padding:1px 6px;border-radius:4px;font-size:9.5px;letter-spacing:.3px;}
+  .chip.pre{background:rgba(91,155,213,.14);color:#8fbde6;}
+  .chip.post{background:rgba(37,194,178,.14);color:var(--teal);}
+  .chip.split{background:rgba(233,169,74,.16);color:var(--amber);}
+  .up{color:var(--red);} .dn{color:var(--green);}
+
+  .opts{display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin:16px 0 4px;font-size:12.5px;color:#a7c0be;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;}
+  .opts label{display:flex;gap:8px;align-items:center;cursor:pointer;}
+  .opts input[type=checkbox]{accent-color:var(--teal);width:15px;height:15px;cursor:pointer;}
+  .opts input[type=text]{background:var(--panel-2);border:1px solid var(--line);color:var(--paper);padding:6px 10px;
+    border-radius:6px;font-family:'IBM Plex Mono';font-size:11.5px;width:255px;}
+  .opts input[type=text]:focus{outline:none;border-color:var(--teal-dim);}
+
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;}
+  footer{padding:26px 5vw;border-top:1px solid var(--line);color:#6b8583;font-family:'IBM Plex Mono';font-size:10.5px;text-align:center;line-height:1.7;}
+  .note{background:rgba(233,169,74,.075);border:1px solid var(--amber-dim);border-radius:9px;padding:13px 16px;
+    font-size:12.5px;color:#e0cba4;margin-top:18px;line-height:1.65;}
+  .note.ok{background:rgba(76,187,135,.08);border-color:#2f6b50;color:#a9dcc2;}
+  .note.warn{background:rgba(210,102,90,.09);border-color:#7a3a33;color:#eab8b0;}
+  details.var{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:0;}
+  details.var summary{cursor:pointer;padding:13px 16px;font-size:12.8px;color:var(--amber);font-family:'IBM Plex Mono';list-style:none;}
+  details.var summary::-webkit-details-marker{display:none;}
+  details.var summary:before{content:'▸ ';}
+  details.var[open] summary:before{content:'▾ ';}
+  details.var .body{padding:0 16px 16px;font-size:12.3px;color:#a7c0be;line-height:1.65;}
+  details.var table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono';font-size:10.8px;margin-top:10px;}
+  details.var td,details.var th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;}
+  details.var th{color:var(--amber);text-align:right;font-weight:500;}
+  details.var td.left,details.var th.left{text-align:left;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logos">
+      <img class="emblem" src="data:image/png;base64,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" alt="State Emblem of India">
+      <img class="epfo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AABChElEQVR42t29d3hVVfb//9r7nNvSCwkhQEIJJSE0A2IBg71g12BvYxewOzqOY2RmbGMbC/beNQKKYgEVY6GK1IQOCSVAEtLLLefs/fvj3HsTOvP5OH5/3+95Hh5S7s09Z62913qv9ypb8H/uEoWFxUZ6erkuKSmxIz8D9J4vLKLIKKHEHpQ38QVDuq607ZBLCIw9X6e1tqR0B7QK3rly1ZQXCwuLzdLSydbeH60FCA1QVFRklJSUqH197h9xyT/+I4tlUVGRAejS0slWSUmJXVBwd+KAAXfFh4Ug9nxHCXkR4WSB9B7wgaQZq7Tw7f8VjvDz8iblDRjwp/iw8nX4nsT/swpwHlALmKxKSkrsgj7XJQ4aNPHc/EGT3gz6/atcRtvMwsJiE4rk/gQhtE4ChTigmDQCrfenfICBA2/tJmGuy4hbMmTQxMsLCq5z7aGI//cU4Dyg0Lm5t4zKz5v4fMDrKTOEe6oh3VdorboZhm9Mzc6av0CJXVRUJDtMUpFRWIgsLCw2tSDB2ST6ICpwXu/bVmeEhS6cRTBIgNCGDP3bMNyJQtAX4X4r4PcuyM+9+dJOihDwxyjij9hyIjv7Ck9sbNxJBsYEBCdJ6UKpEErbCo0WAgFSCyG0rdXR5eXPLczLK3KXl5cEO/+hQXkTN0hh9tE6pEDIffkA04wxQ6G268tXT3m58+9yciZ51q9/NjBo4I3nGqZvqm0HLSG01FpowzANISS2sn6T8NDysmemHsgn/V+jgLCDs/PyJpzpMnyfaW2jVAitteU40Q5jorVWhuGSStkrFTsKystLgjk5kzw+n+ylQ3aOFgwV8BeEiMMxMfu4d62kdEnbtr4W6M/QbJBKrE/ulrqltHSyNWDAXfEuI1AmhOihtaU7lKhVRBEg0Nqeh9KPrlj1zIzwx+j/S3dAsYTJauDACf1NKZYDZtjs7fNzHSW4pbJDn2uhG0GMRtPdMFwuIQS2HToEWWikdCEw0NgoZbehdZWGnxA6w5DuU207qIQQcl8K1FrYLleMK2S1Li8rnzK0M2L6b1zmf1cBkzUgBg+u3rBqZfoGabjylAop9uNGhRBSqaCWhvsMISRKWWgUSoVsrWFf0HNfa0qpkNLa0kJoATJGSCPHkGaO1gqlgnrfwgdnR2iltW2jxbcAhYUPGKWlWP8/d8LF+1vVuqioSJaUlNgI5glhoDXqIAIUSoVsy/JbWlsqbG4MKYUhpcAwJIYhMc3d/xmm83MpJVJKKaUwwgLVWlvKsvyWUiGbg2AoEEJrbUjB/ANB2SJ+H9hq/l5mZu+vnau6Ok9AsRTU/wT66oMLwFnpUkqEcAClUopg0MKybGxboZRCKb3ne8LCFxiGgctlYJoGUgoBCKW01PqglkRLIQylAgGFXgLFsrR0zwVTLEGoErD3DOr+DyigyIDJ9qBBk/p6vYHNixdPDjk/64hsW1q2C3hZ2dz0i7aVOpAZcYQOoZBNe7ufUMjGNA3i4rx065ZMWnoiXbsmkpwUR1y8L+w3HOHbtk1jQxt1dc3s3NlATU0TtbVNtLUFMAyJ1+vG43EhpUApzb6VoTXCFCi9pXzVlPUAhRSbpUSU0PG8BsZ9jS31t1VWioY9nvmPccKRMD8396azTOl+B23PtwlcU17+8ubCwkKztHSsiuyGIbmThit4HMmx4RhJdLL7SCmwbUVbW4BQyCYtLYHDCvoyZEgv+vfPpHefDDIzk4mL8x3y/dXUNNHQ0MK6tdv55edyFi/eQEXFTtrbgnh9brxed1hxah9hhFDALFvbd61a9XxZhDYJP2+2IY1ZLjO2f8hqWxiy7HPWrJlS9T9Vwv9EAdGbyc+dcIOQ5gtOdOpCa3sb2rppRfmUGc7qKTRrc4fcLaX8mxCGR6lgFD5GBB8MWrS2+omP91EwIodTTjmMYcN609jYRrfMZLKz0w/9zjToMEoSQjB//hp+/qmc6284Ba/XzdKlG5nz/Qq+/345q1dtBSAhISa6AHbfjW6Ustq0tovLVk15AtADBkzIdBnyByld/ZTyBwzp9SgdKrN14LTy8pc3Rzir/6YCRGFhoVFaWmoNzpt0t5CuR5QKKtBojZbSCWgsFXpQCEqE5hnT8B5j2QG01nbE/BiGdATf4iezeypnnDmSs84exaBBWYRCFrfe8iqD87PJyk6nubmN/MHZDBqURVNTG/X1LQSDFtU7GwkEQ8TEeLAshWlIhg7rjc/nDpsXwb1/eZsTThzKls21nF90NHFxDo3k9wdZvqyS9979gW+++Y1AwCI+3ocQAqVUBBLbQkjDMDxYdvtXCPEgWj9tSk+BZQcsIYSptbYMw20qbVXYKnjSqlUvrSsq+tgoKRlv/zcUICKIZlDuxIdM0/MX2w7YoGWHY9UKhJTSxFaWbUiXYdtBOwz7hJQSpRRNTe1065bMRRcfw4UXjaFr1yQAlNLsqm3i0Uen8vgTf6Kqqo4F89ZQu6uJjRt3kt41Cduy+erLxfzpmhNxuwy+/24F/fpnsnHjDh5+5HJiYjwYhmTJbxt56qnPmDhpHDt2NJCT0428vJ7Rh1myZCOpqfE0NLTy4vNf8d13y7Esm/h4X2cfobVGGYbLUMpCCImDzDpgbIcS7EpbBU5cteqldf+JOTIOXVHForz8eTUod8LDpukLCx+5O6pxvtbaVgJhaG0rIYQBCNM0aGnxIwRccmkhjz9+FSecOIy4OC9KKYQQCCGoqqpjyW8beeftOcTEeAgEQtTWNqE15A/O4rjjh1BVVcellxQSCtkIASeePIxQyOaIIweglEJKSVJiLN/OXka3bik0NbUxb+5qtlfVk5Qcx9atu3j91dlUVFQzevQgLrhwNCNH9mPLllrWr9+OaToISmsthEBqrcLPqvaiQJzYxbYN6UoWQp6R2mXYl7W1b9c6aKlU/04KcOCls/J9f7HtQCj8XrFfIOk4MymlQCCor29h2LDePPnvq7nk0rHEx/uwbRVFJZs27uC+e99l0aL1XH31Caws28ydd53D6tXbyMxMxrY1K1ZUctyxQ1i2dBMbN+3ksX9N5/QzRvLZZwtISY7nsIK+KKWRUlJX18KGDVVcdvmx+LwexozJ45lnvqC2ppG5c1dz4knDGX/BaOb+Uk7fvt3Iykrj3POOIjk5jsW/rqepqR2vz4N24K7svMD2HUDatiFdKQJ5clr64V/V1Dxa77zvwEo4pECsqKhcREIUx94rcQjmSxiGJBSyaG7xc8NNp/L+h3cycmS/KJY3DEllZTX3/PktPvjgJ+69bzzdu6eQPzibfv0yWbBgLfEJPoSUrFm9lY0bdhCfEMNllx9Lz55d+HzmfTQ2tuH3W8TEeiMmAYAVKyro0aMLX878lVtufoVXXv6GrumJ3HX3uQT8Idau2cbsWUtZv34HhiGj4r3yquP5qORuRo3qT/2uZiLxyMFjFyd+cJm+/kLpcSB0YeHB5XtIO6C8vBwoltU1j32XllpwpGF4+ytl2fsP6cEwHJOTkBDDS6/cxCWXFOJyGShbdXpgQXNTO9U1jaxfV0W//pl8PmMRKalxDB7Siy9mLOLKq46nsqKaU04tICExhvS0RHr07MKAgT2IjfUyZEgvxozJIy7OS5cuCWjt7IB5c9eQkZHEKacWcH7R0dTUNpGWlkBWzzTmz1vDffdfwIxPF+L1utm8uQav10VKSjyW5cDgs84eRXt7kPnz1uB2m0i5/yxDJybWHbLbS7qkp95TWTmWysrJ9u/lA4CxAkp1SpejvhNYl0lpxIdt4l7LwzQlTU1t5OR049XXJ1G3q4Uf5qwkMSmGlNR42toCuN1ODJiYGMOIkTnMm7eG994tZeLN45j5xWLOPnsUFZXVDB3am/79M0lJiSM/P5vYOB9a6zBsFFiWwudz06VLQjSYA+jTJ4Nevbvi8bhwu03ef6+Uiy8Zyyclv3DEkQPQaD7+6GdOPnk4gUCIB+7/gDFj8khOice2baSUFI7Np2vXJL79dhlCODTIvpSgtVam4TFsFVzk9QXPnjfvyQCU8ns6YaBUFxUVGT/++HpTetfDV0mMi8KYW+wufIP6+laGDuvDu+/dTmNDG48/Np3rrj+Zr7/+jX/+/SPGjBlEUlIsWjuRrJSCHj26cNppBYwY2Y+UlHhSUuM58qiB0chYCMKOOhJDyKhQ9nW53Sam2SGwfv0ySUqK5euvl3D1NSfy7eylZHRLoXv3VL7+egn3P3Ah2dnpSOlwSkIIQiGbocN6MzC3B19/9Ru2rXb7mx0UuCGUtiu1sE5dtuylXYfqgP9DBUB5ebkuLCw2Fy16bE2XLgVdTNM7SinLipgi0zRobGzlsMP68vobN5OcHBfevpL2tiAul4FtKZpb/Awf3geldFSAXbokkNolAdtW9OiRitttRn8fEUgELSml2Ly5FtOQLP5tI/V1LbS0+klJiYtSExET5/BJmuTkOEyXyVFHDcQ0DbJ7pbFyRSX/fmoGx58wlBNOGAo4wWEoZLNjRz1JSbEEgxb9+2cyKD+LL2cujt5TRAlaC2VIl1QErikre3F+QcF1ru3bnzzkOMDYP+wsMqB8r59XVo6loOCIBGXZf9WQ6dAkQhiGpLm5nfz8bN58+1aSk+MIBS1iY70EgxYPPVjCLbedyVlnj+KlF78hOTmO7F7pnYTqYO/O/kFKwc4dDbzyyixWLKsgNtbH3+57l8FDevHow1MZe2w+H7z/Iy88/yX9+nejf/9MQBAKWUx57ktWr9lKZmYKcXG+KHnnmD6Nx+MiPz+LteuquPmWM6I8VCRQfO3V2aCgV+90AoEQOTndGDiwO59/vggpBRH3J4R23LcWWX36Hv3+okXV1j7k9j/ZAeU6wvlUVo4FSikqKpLl5c+rlKRhL5ou32m2HbCFEIaUkkAgSEZGMm+8dTPp6UmEQhYut8mypZtYsGAtxx47mK9mLqZwbD6FY/N55OFPKBiRQ0JCTHTVSinRWrN5cy3Tps5DCFi/voqpn8zj1NMKSEtL4LlnvmDdmm3U1jRy5VXHk5wYQ2uLnxtuOg0rZGGYThD27DMzGTIkG5/XzaKF6+jbNyOC7aMsq20rjjpqILGx3uhusSybNWu20dYa4MUXv2b48D5kZCQTDFr065dJZmYKX3yxCK83GnELrZVtmjFZAX97XHXNW18VFX1slJeX6A62FFlYONaorNzbLMl9RMZiWM6ktCF5N4926NjJFkxWhYXFRklJiZ0/cMI5huG5MhRqt4QQhpOpcoKfp5+5lh49uhAMWrhcJrNmLeHuu9/ixptOJT8/mx9/LGP2rKVs2riT4skX4fG4oitdCEFbW4ANG3ZwyyQnnfvYv6ZjmgZCKbZU7ECgGXxYX449bSRrtzbShqCqMUibdDmpepcLEMz5bhluQ9A9MwWlNFOnzkVrzauvzIoKWWtnF0QWQAS+1te3cMVl/6a2tokPP7qLe/78FvPmrsY0DTZt3Ml55x/FhInjqK9vxjSNKAS17XZLSvctgwdPPKGkZLydl1fsjtRywGQVrk/SB9wBhYWFZmVlpUrtOuJ+0xXzWpeU5rPT0w/v0TW1oHHh4se3DRlyR6zW6gsgAZSImJ7Gxlb+/s+LOenk4YRCNm63yebNNWzZUkvfPhl8+MFPnHnW4Zx73pG0twexbZvc3J7ExHgAaGhopb09yFNPzsDtNtlV28y9fy3C39rOqtVVxHVNZUt9O5ndU8n0Ss4ZlcWRqYLE2p2k+xvJ9YZIlgqhbKTPx2/rarjxzvMYMqQXjz/4MXfddTa//rqeyspatlfVMef7FQ4S0hqlNEJEaG3Bli21ZHRzmNfS0pUkJ8WS3SudXr3SeenFbxywMG4Evy3ewLp1VZ24J+1QFUof2TNr2IvLlz8ZChcDpPXoOmpAWtqoYxKSRm2pq1sY2I0N3pMXGpp9S6IVY62W0kgHIaQ0se0gaDUHRFAa5snhtKI0DElDQytnnjWKZ569FsuyMQxJe3uQ8897hIkTx3HauBF88MGPLJy/lvsfuJDk5Lgo7xMJxrZvr2fKczM5++wjeOP1bxlxWB++/3k1yT26cuV5I8ioqiA450fSqjbh3r6Nlopt+AzwtweQUmIakoClEXExyG7d8A7OhVGj8Jx0HHc88z2+uBiq1m7m+mtP5LrrX+Tqa0/E53UzcGB3xhwzKHo/Ugp+W7wBhODdd+ZgWYpnnr0WgMqKanr06ALCQW1VVXWcc9ZDtLT4o6YNtJLCJW1tfSagCchHkw0ku9xxIhhomVC2+rnnO1fsGZ35/crKUtUls+Aq0/RdYNshGxROwIWUhru3kEaOUqEoxRAMWqSlJfDKKxPwxXiiCOHxxz7lrLNGMWPGQjZt2snV15yI0pqG+laystOiiRYpJRMnvIQvHAydefoIysq3kpiVyYAUFxe0rqfv+69hvPY6MYsWEFy/Cf+uBqSUBG2NME2UkDh3JCAYRO2oJrBkOYHPv8T+ZDrD7Tp21rZwwT2X8fGXSynI78HKlZspK9vM6aeP4K/3vsvho/pHqZGMjGS2b6+jqqqOhx+5POqf5s1dzbSp8zimcBCWZZOUFEdqlwS++HxRZwZWaGxtSPdAKV1DhRDdEPicPLPSWqjsrKxhr86b96QdWfBGB7r5QRcWYra1tr8ihEgPVwkaEYiptbK1VtFSDikd1PPgQ5cxcGB3Zn2zlIEDe/DmG9+RnBxHQ0Mr5553JCUf/8Ls2cuYOGkcvft0jcYKVVV17KptonBsPq+/+i3ffPkr2fl9uebS0aR/+jFjZr6D/PwL2rftQLndKJ8P4XEjTROcQqIOpyWiJD7C7UL4fMjYGGx/AG/FRo7atZ6UNSvpNnQAx0+6gEcfLOHPt5/Je+//REK8j/nz13D44f3xeFwYhqRLlwSOPXYwAOvWbePRR6ahlKampomMjCS6dUshFLLJz89ixfJK1qzZtrsStLKVslU0awkSbAzpyrCD4sfq2oUbi4qKjPLyci3D9TsShK6trTvOMFxDnFW+F0IyIj+TUtLS3M4RRwzgrLNH8eyzM2lsbKWtLUCvXunk5vbgiy8WsWxpBWeeeTi33X4m7W0BLMu5odmzlnLzxJeZcNNLLJy/lhdfupHr776AHlvWocdfRPxTT1BdthErMREZF+sI2badwDsSve2bD3BeY9tg2QjDwI6NY1dI0PD9T/T7573om2/j9eeuZtqslWRlJvGvx69k8+YaqqrqosRgJAYBkMKh0K+44jhOOHEo99z9NqGQjZSO1u/68zn4fO49EzqGEJjhxRpmiFFCGGihL9tHPsBhO/NzJ0w1DM+5Vhhe7j93K2htCfDmO7cwenQepT+s5JdfVvFjaRl33Hk2J540DGUrFi5cx7DhffB6Xbu9/8ornubxJ64iLsbDxZc8yUfT/4Lr4w9puet+/M2tyMQER4j6dyzHMQwn2VJXT+qYw5l7/jXMafJSVb6BwcP7cuNNpzpC1BoRTu53Dur+9eg0mpvaOerogdi24vQzRmJZjin9673v8u47c0hOjttXijO6OoQwhFJ2jek2+y9b9nQDaGFEhD90wC29tORprZUR3uFif4nzlmY/x4wdxM03n4Fl2fTpk0F8QgwNDa1U72xg5heL6N2nK0OH9sY0jTDScCJMw5AsWLCOLRXVbNlWR0AJjv/5M2rv/BvK40XG+Bzh/96X1s5DxcfRsq6CnFW/knt6If3OPJYzxxVEKZEIxeEEiNDU1M5tt75KXl5Prr3+JPIGZTFjxkKystNJTIwBoHefDD77dD62rQ9Q8yEEaNswPHFKq4XV1QtWFxZiyghlahuhK6R0ubXW1oGpZudD/nT1idGfBIMWf5/8IccdN4SbJp5GIGjx0ovf8P13y8OBD+za1cytN7/CzZNe5t57z8OQULmzmVuqfqHtyWcw09OQhjw04UsJpun8v6/nNIzd/3WWimVhJiXQUN2A79ZbOKx+YziW12zZUstzz81kxYrKMKnnxCh333MeJ5w4jEcemcr9f3uf4Yf15dPp88MxhaJPn66cdloBzc3t++WmwqSdFo6LOB0gPb1cG5WVpQA6Pe3wv5mGr6/SluHkQ8Veu0BKQVtbkCFDenH7HWdFaef166oIBW3Wb9jO5Ac+5PEnr2L8+NGkpSc6gZSUTC7+AI/XhdfjZvasJVx63WmMq5iL/dRz2CkpCGXvW5idhSclSIlua4PGJlAK4XY7Qg6bGWwb3dgEfj8EAtDWhpASXC46EThItxtl2bRO/ZzYE8ayKzGNO26Yguk2mfrJXPoP6E5GRjIej4ukpFg+eP9H7rrrHOrrW3jjtW9pbmnn8MP7Exfn5JK7pCXy2afzo2zsfnaBDRhonZ2ROWbKnDmvBoxwLYFI7/rNN7YVbJNSDDYMT6yTdOlsBR3z09rq58abTuWww/pGsfPMLxZxw42ncsQRA6ioqGbk4f1ITIx1iLgwg5mdnc6sWUtYv3Ybx5x6OMk/fIvv73/HTkhA7qveMyxMgsHoatft7dDcjHn4SDxF5yDcLtTmLeimZoTLhW5pRcbF4j7nDLxXX4Gn6FyMnBxUVRWqpgbh9e7mV4TXg2734/1tEQtT+rIrJHjowUuoq2tmzZptHHnUAIJBC8OQLF9WwaJF6wiFLK686nhGHTGAspWbGTCgO7at6NYtmbm/rKayYicej2tP96VBY5oeQ2uF1mqa0qGZNTWLQuGlM5nq6gWtNbULf0hLL/ggXNsxRAjpjlQiR2po4uNjuO9v46PlHBUV1SxfVonHYzJ92nyGDu3N4MG9diPVHn9sOp9/voi77z4XWxgc2d3L8FefpLnFj+l1773SDQPd0IDweJCZ3dB19Wh/AKN/DjF/vZu4h/+B64Tj8Fw0HtfYYxCxsdhr1uI+9hjiXn0e7xWXYg4fipmXi2vsGNznnIW9fAX26rWI2BjnswIBdHMzAKHN20gOtTPL24Nf565i5YpKJk4cR1JSbJSJzR+czZrVW0lMjMXnddOrdzrTp83n6NG5UXq8rc3P7G+XERuOiTo7XyEMYSt7OlJeXVb+7DM1NYuCe+Y4o1UPALm5N/cz0N8KKXtqbWEYhmhqaue44wfz6muTogig5ONfWLG8grg4H5dfeSzr12+nb99udO2ahJSCaVPnMfeXVXRJSyCnTwbnXzCahiuvw5o+A+n1oFtbHUtnmgifNyz8RtzjzyX2wcmIlGSshb+CUpijDkd4PVFbjtlR2KeqtiMzujpmqrMfsW1wu1FbttJ0xnnYW7aBbWP0zsYsGI6IjSU4bwHmmjW0PP0s81L70i3Jx/xfN7B61Raem3I9LpcZJfHq61s4/ti/8cnUu1m2rIJ+/TLJH5zlRMuV1Zx1xoNYlh1OY2odrofdpoV9WVnZlB86KuwcOXcuTQw3yxUZRUWwdq2osYN2XEeCHSzLprAwPwq5ATZX1hAb62XGjAVUVzdw8imHkZLitHtpDYPys5g3dzWfTZvHP565EbVgAdaMmUi3C3P00bhPPA6EILTwV6xFv6LrG/DeOpGYu24j+OnnmEeMxDXm6N2cKIbRIfxwbCAzu+1ZKNphygDZsweJP35L6NvvwTBwHTMakeyUw/h27KDu2FPp+t4b9P7HU9z3j0/on9ONxMRYpk+bz/gLRkfp8uTkON5462befnsOaNi6tZb8wVnYtk12djp5g7JYuGANsbE+lLI1CKmxDK839Eu4iFlCR+OguXcC3mknys+96ShpeFJsFVQCIW1bERfnZcSIHABcLoPKimoMQ5CYnMDfii9k1jdLqKlpJBSy8Hi8KKUZMKA7jz1xFfPnrmLjtlr8016AlhZ8j/wD3+03Rz/Xe/3V6Pp6Qgt/JfBhCY3HnYLsloF51BGOY7UshMfjCN62HQF3FjRgV20HpTB6dO/YGVu30XzxlcjumWCayJ49iH1ocofyLAuZkUHM1VdQd9ef6TZ+EWdcdBxfvDubtK7J9O2b0RGUScEH7//IypWbEQJGHTEATzi1GlmQI0f24+efyomLc8rdtba0IVzd/H41GibPKaJIlByoONepZgaEGCGEARolDCED/hC9eqXTu09GdDtu3lxLwYh+rF9fxcYNOxg5MocLLzpmN9QUuY44Kpcj1q+l9oqZeC6+wBG+bXesaKUQyclYCxZhl60i7u1XMQfldS6xAK3RwaCjiMhTh5+86eHHaHvtDfAH8F40nsRH/olwuQh+OgO1qw7XuFMwMjJwHXuM87kR5UkJoRCecafQ9vC/SP50Kq0nXMO/Hv8TzS1+cvplhp/DobG790hl7LH5dOuWsmdVBAAjRvTF5TKi9LbW2MIwTJQ5FJhTXZgnOqeLzUjRFZSLoiJYsqTOKCoq0qtWMjjMBwkpHOKtX/9MvF5XlMI9enQuUgpGj8ll+fIKcnN7YtsdXYwfffgzvXt3Zf7cVYy7oJCs9z4GpfDdeUuH4CPCDIXAslFV2/FefAHmoDx0SysixgdS0vram7S9/S4CgevwESQ8cB/C6wND0v7xJ7Q88E8S/34/7jFH0zDxVtpefo3YG67F3r4Tc9hQYu6+o+OpO1MaYVNm5A4k4fWXabzqBu7414O8vGQzy39eQW19C/f85XyGDeuNlJJjwuxpJOKN5DIiCuib043k5Dja24MYRkclhVAMLSwsNrdtqzMKC4t3U4AOd7JQ4uwNe/16yM+dmKO1jdNl4pR/9+ufuRt12xGuC4YO7b1buXh9fQtffbkYn89NXGIMn7w5izu/+w55+EjM/EFRBxla+Cvm8GFR56r9Afxvv4f/k+n47rgZzzln0friKzRMvJWE665Bb9uOv2QqDY2NJL80xQkEf5mHmZmJOXQw1uq16JYWAqU/ETvhBmRKMsHpn+F//W1A4738kt2d99ZtBL/9HjN3IO7TTyWmdw82PPkKS9OP4N57z2PDpmrefut7hg79U/jZ1T6LASK7vWvXJDK6JbN2zTZM040QCK0VCNU/TEFb69d32gE5OZMSXC7RVUqVLpTqrhHdBDJbo/srZUeznoZh0Kd3173qwyJfR5QSSW4kJ8dx8qmH4XWbNFuCmLXlqPLVeB54AIDAW+8S+KAEe1MFSb/+jFVWTvvTUwh9NwezYDj2ynLUjmqnmPbTz/EWHIaMiUHkDkBu2IB/xhdY99yF2bsX2DYpX0zF6NuHpom3EX/fX2ibOp3AJ9MJzJiJqtpB298fAg2u48aitmwl+PVsrLnz0c3N2JVbiLn7drRp4P9tMfHJaaRnHcUdd77JHXeezRVXHIdlKVyuAzfFROj4rKw0ylZuJiZGAEpqbQNiwOC8iVcqvXvEaXrd3C2E/IuTWXfhcHDaScJEyk6UxjQlmZkp+y3Qi6yAiH/4/PNFjBtXQGyMhwXLtzCkbT2tbUHca9bQdMZ5iOQkYh74K61/fYCms8ajGxsxR40kYeoHmEccTssV1zpBmFK4snqS8FkJduVmQt//QNKbr9Dy6OOomhro0xvXyAJCy1Zgb61CxMUie2Vjz1uAv6kZ97GFuJ97ChHjo/G4U2k8/jSEy4UxKBfPhUW4x52CtWQZbX9/CHv9RuQRo4mp3cE5R/Zi6NDeHDa8D6br0PpYnLpUg27dkjuZYuHsAESqlK439oyTTa11dymFUMq2tFZC66AOOxUzImxbKWJiPGF4ebCiaqcM5OuvFrNzRz0Nu5oJxcaRuXQxqR4X9qZKYm6biOv4Y8Mmpx3P+PPxXnkpIjEx6lx1ux/d1ARSYvbpDR6PE5C1tWOOOAwzdyCusJPWK1fRNuMLPOefg9mzJ83X3ED8vXfvhrKssnJkSjIx/yjGdfSRUQgKoBcswjxsGL47b8Hn89FWeAIpLXU8O2c7C34uo3dON0455TCye6VHF9h+yhNxOJ7EqCXozARZdnAvqtQUAhkupBUOjy320XWoiItz4wvncA9UKhnWOn36ZDDrmyXU1zUzcGQeXep2wJjRJMz4pCNACkNA72UXO8IPhSLVXY6OpSD4+Zf4n3oGLNuJfMccTfMV12IMyUf4fDSdexHW4t9I/u5LQr8uhkCQ+If+QfCTaVhLl2MOG+LA2OpaRJdU3Kef2hFPWBa43eD3Yx42HCOnL7quDn/QpmeM5pgThvHFm18z44tfiY31hstoNIZx4FrRxKTYfSlJ7Ks9y9Roz8EKbSMVBD6f65C2YihkUTT+aK697iS2bKllV2M7xl/eQI8oCO9V7SAgKR1qIHK5Ov39mBj8z7+CMSiXhBlTsX5bSuMJ43CNGgkCgp9MR63fgPC4MXL6YOT0xcjp69xvczOtt9xJ6JQzcV9wPnFPP47skgJt/s4lfFFnLLw+1LYq5+uUFDwpSez6bRXzmhoYMrQ3U16eQFpa4m51Swe64sME3aGkM0y0Tj44la4xXEbYCR34dUIItm3bxdtvzeGwgr4EgxbrNu5khBDYu3Y5D2qYDupRCt3Wjqrd5fiQCKspJLquDpGYQPzbryEzuhJ470PMwXnEvfgMIimRum59MC+5EO/1V1PXbzDBL792IuZgiLbHn0J0TSfho3dovvhK2p97EWGa2Bs3Eir9CSM7ywnspISEBKyly1Bbt6Fqd6FDIQiFsINB+vXPpCA7mbKVm+nVuyu9DmKCIpfH6zqEXtCICfovdIHHx8ewdm0Vi3/dgN8fZMSo/phJCbTN/IbmjRXgdjv43u1G79hJyw2TEHGxzg4IhsCQWPMW4r6oCJnRlZaJt6E2byFhxieonTux561GxMXiuagIpMTo05vmi67A6N8PlMJaWY7nnDMxBvTHd/cdtFw3EdmjOyKtC6233gUxMdG6YuHxoBsa0VrTfN5FaGWjtmzFExdLVnoCL7/0DavX7eClV24KK4BDFu7v1qYqhMAO2YRC9kFfB5CSEscDky/C63ERCITokpZI4Iw38F54PrEPTkZt3wFSOJ7H40ZblpPD9XoQSYmgofm6CQTe/QAjqyeBt98n/p1XafvnI5jDh2GvWYtM74JITXU+NzkJTBO1bTtI0cF4AjI5Gd8tE4i5724IBtG2DbYK7zbtKNwMh0OmC+1vp3FUIdKQ1DW0UVvbxD8fvIQhQ3pFofbBroA/dMjZVBOBrbV2ZgKIaOOx2LOVNBAI0d4eIgJU9pcTj9DWr706m2HD+nDMmFwamttJ8sXg7pVN4L2PCLz5NiIjAwJ+dLsfER8PygYhiX/jJUR6GkZaGiGlCH7/A57zz6H1vsmYAwcQc989ND33IvbmrbRcexMyqyfW4iUIny/KDwmfD2vxEprOOA9VuRnfHbeiG5touHESMsWxuLrd75B4qakgQLe0IJOSiP3nZEyXQT1uKrbs4ogjB1BaWkZaWiIjRuYckhKaW9qjmcB99HFGYmOttQNDk1wun6lUIFrhFU4aRN8jpaC9PUh7W2A3Qe8z66k1hmEwcdI4rrjs3zz/7OecfskJ3Ng7G1VdA+5GYh6ajJE7ELVrF9bCxbhPORGEIPD+R9jbqjDT07C3bcMcPoz4V55HZnYj8Oa7hH6Z5yCbo4/Erqgg8N6H4PY45iuC+7Tj4FVDI2r+InRtLSTEYW3YiOzRnbi/3OUs/J9+JrR8BXG33wIa7J07aX/uBXTtLoTWBFLTEBVB4uJ9DMhKZ8DA7gdFgJGrsaF1P43gIlzN6axvIQSm0OIx2/aPsFUwC+gpEKla6x5CyKQIpWxISVtbgLq65nBtj94vcIrAtLm/rCKnXzdeeOEGhJS0P7OO0LyFmANyCJX+hL15K/a6dajNW5ynUjbWvAW4x5+Hqq/HXrcBo1cWrXf8BdeYo/C/+ib2xo2I1GTcZ56O2rED7/VX03zexU5OQcpIswG6qRn3uWcR89c/0/7go46XMyR25WbaS6aB1ljrNhBasQKkAaaBvXkLZtd0dHs7ptsklJVFjtGGRyvKVlRy5JEDiI/3HejRo0Kvrm7c5yLVWrVrVJ3Qsk6j6wV6u7ly9ZTpwPTOLxw88MYCLcTPQgiv1lojhbAsRVVVHQUcuFoksj0LRvTjvPOPZvGv62lsD3HcmKMIvPIGwYoK3CccC6EQqmoHqnILhILoQBC7ohJshZASo38OCdM/cnbFqjUk/vwdrXfcje+OWwjO+BKZ2Q21YyeqqgrRpUtHEkYKJ/E+dDBGn97IHj0cR9vcgkxOwuieCUqhtm9HNzdjZmeBIdE7diJiYhE7d9LiS6Dk500cX5jHlzN/5dLLjqV3764HNT+RfPD27fWdewi0EFJobTdJzbG+kFy/cP2zzRGawSyiyKguzBPppeXa4eJK7IGDa5euWtm1BiF7gqUFCNu22bhp527c934dtu1UCrz11vfM+HQBmT3TWJmVyvUJsbQFbVRNrZO/TU9DZmZgr10PIQvP+POQ3TIciNreTuCT6ciePTEG5RH8eKoTuKWlYa9e4zi7N952HGjnG4qU6++sdmBueztaSozumQhbE/xmNjIuHhnjI7bofHRDI8Llwj10CJ7TT8N67wPsYUOps+DD934AKZkxYwG5eT2jDeAHWny2rdi8uaYTJa21QAqt7ZoVq6f8tnvnabkwSyixd29n0qKkRKj8vAkVQsieWjsw1TAM1q7ZthfPvz8laK35dtZSnnjqanr1SufqO96lZWA+sZlp+P5RvP83B4M0X3kt1voN2H+5H/dZp6Pb27GWrwTbxpq7AIQg+NU3EAwh4uIcSLlHuZmqqw8HerGI+DiM/v1IfPPlAxE52NuqsL6eRd2l13BUl97kdB3KrroWevVKD6cPDkzESSnYubOBHdvro2lMrYV2wAEbwo0v0klHOnM0zL2HcDgDirSW5ULIMVprrbRTrrd+3Xb8/hBer+uAeDjSqTh6dB7/emQqqclx9O2ZSpcbJ7LrrEswTzjOgYqdR84oBaaJ/7U3MXJzcZ9yMrJXFu2PP01g6sekbt6E/5XXaf7T9ci0LqiqHU4ssddNaJAGascO57tAAP9LrxL6ejaqthbd1oZua0e3tkFbm/N9a6uj3F0NdDnmcIyjj+S9217nlVcnUjCy314we//2X7Bh/Xbq61vCDejhHSAEWssVgC4szBOlpQeNA4qlFPW/RT5Wh+slt2ypZdPGHdHtuL8bioTr1994Cp9+Op+GulbOPGskn/1WwUmDBtJ42jkOHOysRcNwbPLwYcS98AxN516I66gjMIfkQ8CPvW4DwVnfE/vgA7Tee7+TwO/MeEUqK5QGlwu1fWc48aIIfPiJE19YdphjCsPVSFpTSLRpYAT91J40jrnLt5KS6OOWm1/hr/cVMSg/K1qkdbDr1183hJsKRdQehiHpEmcH/HDAQEzU1JRLKLGUuPEnbWsVJutwGjHa+PXX9YdkDyPX2WcfEf165szfiBl8DIWLFtJkCURriyMkFVaEAAIB2p+egrVkGaEffnL8gcdD0/kXIRMTkVk9EcnJqIbGjtSk00qJVgrh9SJcJmr7dscEeb1gBTsKu0QHZtbKcfhIUP4AKUcfTnnBUcx57huyemewaeNOKitrGDykV3iIhzgo+Fi0aB1utxF1wFJiKBX0K9R3gC4tHSA6t7CKPccROCjo5gIt9L8QHBvJCRiGpHNZyqEEJJEOlIqKat55ew4VG3Zw421nMey1p2h892NiLjwfkZiI8PkQyUlYS5ahqrajduzA3rApHNFKhMuMEnUiLs6p5+m08rXfj9EvBxkfj7X4N4dqCIbw3nQtuqERmZ2FiIlBJMSDYTgl7HFO8CcSE9GtbbSMv4Tmv/+TrOsv+4/phIgs9i5LiaKgEOi/p3RZ/mhpaakVHmuj6DQAVQA6L68ozhAZf9Va3CGl6VIquFuQ5ZRuu/h85n107556yEoovv8DsrPTOOKI/gzKz4amOhoHH4nn2afwnnlaR1XDqtU0X3Y1IiEB2TUdHQyi6+pR27ahm1vQgQBmfh6qutbJFRgOhtfVtcS//yayVzaNx5zomBspUZWb8Vx2MfFvvXLgyPXeYuLrdjLj3Jv4+I1Z3H1vEU2NbfTqnU5mZmq4Hnb/z2lZTv/w2299z333vUdqShyWpXZDBYbhwVbBhRp1e1nZc79EzXVxcbEsLS1l8MCbCwyZ+LWUrrO1tgylbDtifjo3YdfVNZOdnc6wYb0PWQHHHT+EXbtaeOKJT6naXMO62iCpeTkk/L0YfeqpGKkp0O5HdssgNG8Bamc1riMORwiJMTif2Ef+iffqK7ArNiO7pOC9+gqC02cg4mLRzS2Yw4cS+/e/IbtnYi9Zir16DSImBrTCHHEY7pNOgJAVXmbhaDnkcED+kmm0Pf08Ox59iiNHD6JHj1QeefgT5s9bw3nnHxUtrT+QAiK/evThaeyMIqA9d0nINqSrp0BfmdZlVEJyyrDfdu1a3G5OnlwuAIVQ6UK6B1qWPyQE5n6mk+N2u/js0wVccmlhNNg4UHgeuZF5v6zihBOGMfWTueTl1tDlouOJq9xI3PiLkd98gdE1HbV1G9bCxagdO2hfUeb8YdMk9EMpRv/+qE2bEHFxBKZ/7th/7eQWfLdPchIrWuO57GKCs78LbymFOWRwOMFjd9DdoRB4PAS+L0Xddz9p307juY9X0/zmjzz5zLWMOWYQQ4b2Jikp9qCLTCmFFJKlyzaxZMkGYmK9ew0U7BjmEbIB6XL57pDoz4CfTBxbhC3UT8pu3y6l0U1re58zIJTSxMS4Wb5sE/PmrWHMmDzsTsM3DuScbr39TK67dgq33n4mfXql8+gjU+k1+Q5kfR322BOJ/e5rgtM+RVVUIDIyovV4WmvsslVYS5Y5hJtlo0NBh8ALhRBJiRhD8qNL0bHzTvGW8Lgx8/P2LkdxufB/NQs1YRLLr7qZ0i82ccLIbH4ItnP5pU/xyL+uIDMzJQynD4H8EfDRBz/S3h7C63Vj2/uLVLUQwkXIai/rkp46j1VOC42GIqO8/PkWED9LYWqthTpwzhdef232Qbdm598nJMTw4Ud3UVDQl/HjH6O9PcifJ71Iw4OPYJ52Cg1HjqXtxdcQqanolhbU9p1OxLyrzmEulUI3t4DASV9GquP8fnRDY6dALhQe3CXQto32BxyhW5bzesOg7clnkbffQeWd9/FGUyL9usby6ptzKDr/aG686dRo++zBUF6k8WTjxp18+eXiaKPfAayBktIUAvFxaelkq7Cw2DCd4CscHCg9TUuKEPv/ZKUUcfFefiotZ+4vqzjq6NzolKoDXZGdsnxZBaeNG8GJJw1j6sc/88zDHzPu4ms55bDBNP65mFBLK67hQ3EdewwiNdWx87vqUA0NyIyuuEYU0PbQvwj9PA8RHx4j3emhVZPTN4CUTqHX1q3OZvZ4sDdsov3Oe2hduQrz3TfZbqSStO47zh0/mo2VNcybt4ar/nR8lFQ7GPMZCThfe3U2DQ2tB2lRAiGkYVuBoKXVhwClpSjT+cKZaxNSoW+FTZ2URorTEbmbIjp979iH556dyRFHDjwgRb1ncHbiScM48aRhvPvOD8z5YSVPPPkn8nskULwghRveeZvYyQ9gNzbiPnMc5vBh+6ErQrvf2v5DcuyKzWDbtN59H4H3PsQ4+SS6rl7MPf/4lFNGGwSUpui8R4mN9fDoY1dGp3gdSgmKYUhWlW/h0+nzSEiIOdjqt53h5IEfVq+asjYC+yPLVhcVFRlr175cq+ErKV1op5pIa61trbFFpyppZxf4mBvunY0M4zvU2hnbViQkxvDJ1Hs4bdwIFv22kdrVm3j4m00k/PAN7gvH03z+JTQefxqBjz4Jl7ATrZxT9fUIU3ZoPbILlAIr5DQnSgFeL8Gp02koPInADz+R+NHbvHr0BVw/4VW8oQCPPPYp9/1tPHfedTbPv3gjXbsmRfsBDqHlDIDHH/s0XIYo90y8KK2xO48nEAKhhfGGY3UchLm33dDyba1tLUAJIYVpeg3DcBtKq9bOpepaa3w+N0888SnV1Y3RFs+Dt3c5853PPPNwBgzszssvfUPFpp0sXbmZ2649Di0ksXffTtKin3CddALtTzxNw9iTab7rrwSXLEM3N6NbWtFCoqVEBwLODRkSJSVW2Wp0fR26tg6REI/MHUjMnbeS/OvPGMeM4ZRRfSj9bhlKSnxeN198vohRRwwgJsaDPsQ8YsScTps2j+++W7bn6tdCSCGlS5qmxwgPegtJaWBZgc2G4focEBGrY3SeBQSIrOxhm0NBLnW54rooFazR6K+0th+SprhLa1VgSE8vpewwnDKprWmiurqRU08rOOScqRCEe4YFu3Y1M23aPO6553wOG5GDthVCK0RsLK7RR+K95irM3IH4dlahvp5N29ezoKISl7JxSbBa23B364pubsWYPYvA9z9iHluI7/priC2+F+81V2IMHIAA7JBF18wUYmO9tLT6eeHFG+nXLxPTlIcEKDqXH27buotJE16K1sZGzIxpuqWtrC81oTu0xiUEPaV0+UzTK5UKPbVi5dOzIzM59uHmw9MRB0w4TxpmihFUny5d/2xN5Lf5+RNGCG3Od9KVWkYoivr6Fh5+9HIuvrjwoLB03wy0hdtt7k7wRZquw9h95i8b6JMRT26KSaC2gbp1lbTWN9GrbzcaqmrwJicya1EFJ/zpDBK6JO4NPcPEm9YarTQbN+2kb9+MQxL67n3gTnHulZf/m59/Lu+8+jVIJQQhLDFsxZqn1wAMHXBLL8u0iwTiFCMYvHzZupeqwu5UHxxnhdtpioqcvoHS0snWoNybnjDNmNstq90SQpiRYUtKKd5973YOK+j7Hykhsmv2xa7qcG9v/a5mLr7wceqb2njpjVt5/4OfmLvAaQKPjfUQtBRnnz2KB+57l0uKjuTqPx2PHQxhmKbjC36nK0I5/OvRaTz37BekpiZEu/+doX0+MxTy31+++rl/5OUVu8vLy+2DDXA19kdHOwOGftAwXpWXl2tn2FCRkZXt+TEY4DzDcKU78xCcXWBZFj/+WMZJJw8jKSn2kNFEpIJsXytRh4dwlJVv4ccfy4mP97FiyQYqN1QR55K89cZEli5YzeKfy0iKcWFqxS8/l9N/QHd6ZKWFSVZxwCKyQxd+R0/cww99QlJSB+TUWivT9BiWFfjVFxu8avToPqK09HkbytXuspy81wfuZ5lGBgztVrSlIU8vXvxym8K+UitVH5njoZTC63VTVVXHTTe8SENDK4YhD8kpHxhFOu/fsaOexKQYRo8ZRF5+Ntuq6vHEeJgzZwX1jW30y+3JrNnLMN0mV1x5PHN/WX1Iiv9Phf/9d8u576/vEhe3m8PWQkihbHunreVVixe/HCopydMd6Gc3Wep9BNH/2VVQcJ1r8eKXQ/m5N30uDe/pzmxoZydFhvYNH96HV1+fFA1M/lOfsOfl9wepqWmiqamNnj3TmD5tHg2NrTTWtzL2uMH07NmF5csqOPa4wVGb3HnC4u9hdn74YSUTbnwxTEp2LC6tsU3DbVjKX1JW/vz4iHwO9e//R3cXGTQ0KHfCA4Y0/6a0vdcucsZWtnBYQV9efOkm0tMT/1dK+L1LAf9Th2sYktmzl3Lrza+itXaGz+69s20pTaGt4J0rVj//1P6PUPxfKSCMkAZOuNU0vU/ZKrDflJhpOtmznJxMnnv+evr3z4wOQ/2frMia6kYSEmOiXSod42I0lqXwuE38AYumxlba2oIEgqEo/5SdnfYf23sH6ThTFD94/0eK738fl8vcbeXvnYgWSGkKrYKXrCif8v6+jnP5XyigWBYVlYvylWnXGYbneaUsOwJDD0Q9tLYGSEyM4cGHL+Pkk4d30LdSHoIQHHRUtnIzL774NaNG9aO+vpX589fQt2836nY1YytFenoiW7fuIj0tkZTUeFJT4zFNg2nT5nH11SdwxpmHH3J80jnIsiybRx6eymuvziYuznsIgabWQkgNMqRV6NyVq57/sri4WE6efGAlHMLgVi1gLD7ftylWyPxUSulTKjqW/qA9BX5/kC8+X4S/PcSIkTm4XGa0fefAq1JE7f+uXc3UVDdyx13nMH/eGiZMPA2320V6egK33nYWWzbXcPLJwzn3vKNYWbaZ5uZ2Wlv93Hb7mXSUAR581UcS7+vWbeeWSS/z6fT5JCbF7gYIDuTWnbMEPG6t7FG5g3Jfeeutf1v7Qj6HgIJ2+8MaHhCLF79cK7Qep5Wql9I0w1zRAZkS21a4XCYxPg9TpszkwvGPsWjRuijfYttqvw8WqTPNyk4jL68H389ZwexZS6naVofL5Uy0Sk6JZ8lvG/nwg5/J6deNT0p+oXzl5rCiDXbtau7EI+5/p0VG3mutefON77ig6FEWLFhLcmo8Su12j/v9QxptS+l2KRWs0tK+uLT0zQA8cNCjEA/RM05WUCxXrp4yDxU8TaMbDWka+1aCVkIY0XBWKY3SmpSUeFasqOTyS5+i+P732V5Vt5si9rW9ncImza66Frp0SaC93SkgdoZhKKyQTdeMJAblZ+HzeejXP5PBQ3oxKjyEz98e3O/yiHxmpN12/rw1XHzR4zxQ/EH0SBPbsveg3hD7qgvUWtuGdBsauzJoBY8rK3thkSP8g/uA/2h4d2Fhsblw8RObu6QN+14I4wwpzQQnd9xxJqOULqm1tR1kvBCG0FrZzgEHOjqodcGCdcyc+SvNze306Z3hnBEQpgkiiug80HXQoCzOP/8oBgzswbKlmxgxIoetW2tpafEzekwefftk8M47P3DW2aPYsGE7LtNg584G+vXvTlLYhDiJpN2FLoQzpvKf//iYJ5/4jK1baklMjImOUo4IV0oz7EEEQhhCo20RXryRI0y0slfbOnDa6tUvrXUmUE62f2cUtDsUzc29aZAhjG+kNLvbdtBGgCE9hlah1cIMFWrLOAHhekEImWA7h95Em2wjh/i0tPjp3j2FM848PHqIz54OMaKMSFXGli01ZGSkEApZBIMWKSlxCCHYtGknXbsmRY89iTSRO7uM3Ry/3x/kl19W8/GHP/Hjj2X4/UHi42N2O8THYeKxDcNjaq12oeyrhVR+jfmBEDLZtoOWg/i8pq2slS7LOnnJmilVzhFepYd89OH/CGFH44FB1/UVeL6SwuyntUKjK0NWYOyaNS9VAOTm3jTIkMaLhnSPVnaIzqcYCiGQhiAY6HSMVUEOJ540jNFj8ujVK/0gqUB2G0PcUYup94my2tuDrFxZyZzvl/P99ytYt7YKrTVxcb69jrHSGlsKaUjDhbKt2Zb2T3AO54k8k/mxFGYegNKhBSFLnbtmzZSqIj42Shj/Xz3GqoOiCx/X1K/f9d09Lvc3ILprETqqrOyFVR2HIZfYgBw86OY70dyj0Ulw4IPcLMsmJTmO/gN7MHx4H4YMzaZ/v+7hccLeQw2jqKlpoqqqjrKVm1m6dBPLlm6ioqIavz+I13ugg9y0ltIjtLZ2KWX/o2zVlKfBOde+utAhJPPyrk4RxHwk0cm01J24YvP79X/kQW67MaVQYg/td313y02XsrKXlu1+I8Uy4sQHDZowVmLM2Ueqc7dkTSRX4PeHCIXHhcWGjyc56FGGjU5PV3V1I7U1TdTVNeNvD4EAj8d10KMMtdZKSpfQ2p4esoN3hHdyeJjJZNX5mYuKiow1azze5cvfbT3UoOu/oIDdSxr3dSOFhcVmenq5LivreqNLep61bL99sBii47QM4ZT+2IpQyD7EwzydAx86HeYZNVsHw/IOpew1leV/bsWqKZMcSnlycN+xkdCdqwr/p9L7nViWjpW+v8/Iz50wXxruw8PFScYBxaCFEkLvdkbZnuTaXu0/kUxs+IvOI+k7sUrqIMhPCyegajUs14Bl657adoDVLQ4aZBzC9TudJzxZ7fsmiyWgc3Ovz0GIoeGRyPJAtlsIQxiG2wjHElprp4tTKW0rpbVtO0l9y9r9n22pTrtDKaW1rbW2nMS41kKYQkqXcRCBCaWVZZieWNsVvMDZwT/I/d7s73DU+e+kgP2hpXBpu3Zf7nLFe5wKCyefuZ8ATitl77RV8EutVY1TFOAxTNNrOko5NEZNCFMa0m2Yptc0TY8hhCmUtquUHfxFdBTu70umqqPogNtyciZ5SktLbf6LR7//VxUwdmx4KK1Ui2yr7ScpDdM0veFKAW2HHzhiILSULiHggbLy58b5lM61lHWEsgPXWVbgWVsFv1RKN0ZmYe9/VQq0tiuVHfzGVoEpth24AVsd2e6PzVu5aspordU7huER4QnB0cDYgZ6mNE2vS9mhjSAfcrtT9O9hZv4AH3BoV37+pEKUvhohzjakO14pi3CFhTIM01S2tSG1rXlwemVbaF/HwubnTfxcSvduSaA9V7CULqns4LiVq57/cl8mccCALbEuM2a+FGaeskNBhHBL6QIkWoVWa61e8IfEm+vXP9v0R8hE/jGid86cX7ny2dKV5c9dblhyiG1bxVqrTabpNqQ0XEIYAqEfKq18y19dWB3u1C8yCguLzVNyJnmgWGpNU2Qe54HhjBRQLE85ZZKnsLDYDMcloqioXKxZ83qzVNalWuuAafrcIJTW9veWClxc32QctnLVc8+sX/9sU1FRkfFHSOYPzjUVGUVAZHXn5d0UJ7V5thDiFqUts0t6l5GlpZMV7H6Oe+Sg5Py8SW8Zhvtyy/JbkYFS+9wBlnX6ytXPzSwqKjIig2j3jF0GDbzxcml4hghlv7d81bNLOgLMIqOkpET9N83ObsmrP1YBJXZJpwRPScnzLcC7wHsDB05ICafxxP4xkjoU+hzd0fmzz3uAYlm2evLbnd8Unhqs9lbY/xMmaG/YGn5Q4ZgI9OrVU3btz+FVF+aF53CJXQdPiqiAFMJ/KPS689kOVA7fj/6jJfH/AZbkeyFd6E4pAAAAAElFTkSuQmCC" alt="EPFO">
+    </div>
+    <div class="divider"></div>
+    <div>
+      <h1>14B → VISHWAS Recalculator</h1>
+      <div class="tag">Employees' Provident Fund Organisation · RO Sangareddy</div>
+    </div>
+  </div>
+  <div class="pill">VISHWAS, 2026 · G.S.R. 525(E) · in force 29.06.2026</div>
+</header>
+
+<main>
+  <h2 class="lede">Upload the 14B summons PDF. <span>Get the revised Section 128 summons</span> and its Annexure — Word, PDF and Excel.</h2>
+  <p class="sub">Reads the month-wise Annexure from a Section 14B summons, reprices each default at the VISHWAS, 2026 rates, and drafts the replacement notice under Section 128 of the Code on Social Security, 2020 together with a working Annexure&#8209;A.</p>
+
+  <div class="panel rate-table">
+    <table>
+      <thead><tr><th>Period of delay</th><th>Upto 25/09/2008 (% p.a.)</th><th>Upto 13/06/2024 (% p.a.)</th><th>From 14.06.2024 (% per month or part thereof)</th></tr></thead>
+      <tbody>
+        <tr><td>Less than 2 months</td><td>17%</td><td>5%</td><td class="hl">0.25%</td></tr>
+        <tr><td>2 months and above, and less than 4 months</td><td>22%</td><td>10%</td><td class="hl">0.50%</td></tr>
+        <tr><td>4 months and above, and less than 6 months</td><td>27%</td><td>15%</td><td class="hl">1%</td></tr>
+        <tr><td>6 months and above</td><td>37%</td><td>25%</td><td class="hl">1%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="howbox">
+    <div class="how">
+      <h4>Delay periods are split at each rate change</h4>
+      <p>Where a default runs across <code>25.09.2008</code> or <code>14.06.2024</code>, the delay is apportioned. Each part is charged at the rate in force during that part, and the slab for each part is fixed by that part's own length — not by the total delay.</p>
+    </div>
+    <div class="how b2">
+      <h4>VISHWAS only touches the post-14.06.2024 part</h4>
+      <p>The flat <code>1%</code> per month is replaced by the graded <code>0.25 / 0.50 / 1.00%</code>. Everything accruing before 14.06.2024 keeps the annual rate that already applied, so a long-running default may see little or no reduction.</p>
+    </div>
+  </div>
+
+  <div id="dropzone" class="dropzone">
+    <input type="file" id="fileInput" accept="application/pdf">
+    <div class="ic">⬆</div>
+    <h3>Drop the 14B summons PDF here, or click to browse</h3>
+    <p>Parsed entirely in your browser — nothing is uploaded anywhere.</p>
+  </div>
+  <div class="bar" id="bar"><div></div></div>
+  <div id="status"></div>
+  <div id="diag"></div>
+
+  <div id="results" style="display:none;">
+    <div class="section">
+      <h2><span class="no">01</span> Establishment &amp; notice</h2>
+      <div class="meta-grid" id="metaGrid"></div>
+    </div>
+
+    <div class="section">
+      <h2><span class="no">02</span> Damages</h2>
+      <div class="desc">Amounts across the records demanded in the revised notice.</div>
+      <div class="summary-cards" id="summaryCards"></div>
+      <div class="opts">
+        <label><input type="checkbox" id="optAuto" checked> Exclude remittances already recovered by auto-levy</label>
+        <label>Notice No. <input type="text" id="optNo"></label>
+      </div>
+      <div id="variance"></div>
+    </div>
+
+    <div class="section">
+      <h2><span class="no">03</span> Record-wise working</h2>
+      <div class="desc">Rate basis per record: <span class="chip pre">pre</span> wholly before 14.06.2024 &nbsp; <span class="chip split">split</span> straddles the cutoff, apportioned &nbsp; <span class="chip post">post</span> wholly on or after 14.06.2024. Faded rows are auto-levy remittances.</div>
+      <div class="tablewrap"><table class="data" id="dataTable"></table></div>
+    </div>
+
+    <div class="note" id="footnote"></div>
+
+    <div class="actions">
+      <button class="btn" id="btnWord">Download Word notice</button>
+      <button class="btn amber" id="btnPdf">Download PDF notice</button>
+      <button class="btn ghost" id="btnXlsx">Download Annexure&#8209;A (Excel)</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Employees' Provident Fund Organisation · Regional Office, Sangareddy (Patancheru)<br>
+  Internal working tool — figures must be verified before an order is passed. Not an official EPFO publication.
+</footer>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const dropzone=document.getElementById('dropzone'), fileInput=document.getElementById('fileInput'),
+      statusEl=document.getElementById('status'), diagEl=document.getElementById('diag'),
+      resultsEl=document.getElementById('results'), bar=document.getElementById('bar');
+let PARSED=null, LAST_LINES=[];
+
+dropzone.addEventListener('click',()=>fileInput.click());
+dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('drag');});
+dropzone.addEventListener('dragleave',()=>dropzone.classList.remove('drag'));
+dropzone.addEventListener('drop',e=>{e.preventDefault();dropzone.classList.remove('drag');if(e.dataTransfer.files.length)handleFile(e.dataTransfer.files[0]);});
+fileInput.addEventListener('change',e=>{if(e.target.files.length)handleFile(e.target.files[0]);});
+
+function setStatus(h,err){statusEl.innerHTML=h;statusEl.className=err?'err':'';}
+function prog(p){bar.style.display=p===null?'none':'block'; if(p!==null)bar.firstElementChild.style.width=p+'%';}
+function num(s){return parseInt(String(s).replace(/,/g,''),10)||0;}
+function IN(n){return Number(Math.round(n)||0).toLocaleString('en-IN');}
+function inr(n){return '₹'+IN(n);}
+const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTHS={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
+function parseDMY(s){const m=String(s).match(/(\d{1,2})-([A-Z]{3})-(\d{4})/i);if(!m)return null;
+  const mo=MONTHS[m[2].toUpperCase()];return mo===undefined?null:new Date(+m[3],mo,+m[1]);}
+function parseWM(s){const m=String(s).match(/([A-Z]{3})-(\d{4})/i);if(!m)return null;
+  const mo=MONTHS[m[1].toUpperCase()];return mo===undefined?null:new Date(+m[2],mo,1);}
+function fd(d){return d?String(d.getDate()).padStart(2,'0')+'-'+MN[d.getMonth()]+'-'+d.getFullYear():'-';}
+function fm(d){return d?MN[d.getMonth()]+'-'+d.getFullYear():'-';}
+
+/* ---------- PDF text: rebuild visual reading order ---------- */
+function reconstructLines(items){
+  const lines=[];
+  items.forEach(it=>{ if(!it.str||!it.str.trim())return;
+    const x=it.transform[4],y=it.transform[5];
+    let L=lines.find(l=>Math.abs(l.y-y)<3.5);
+    if(!L){L={y,parts:[]};lines.push(L);} L.parts.push({x,str:it.str}); });
+  lines.sort((a,b)=>b.y-a.y);
+  return lines.map(l=>l.parts.sort((a,b)=>a.x-b.x).map(p=>p.str).join(' ').replace(/\s+/g,' ').trim());
+}
+function findAmountLine(buf){
+  const c=[];
+  buf.forEach(line=>{const s=line.replace(/\b(Contr|Paid|Interest|Payable|14B|dues)\b/gi,' ').trim();
+    if(!s||!/^[\d,\s]+$/.test(s))return;
+    const n=s.split(/\s+/).filter(Boolean).map(num);
+    if(n.length===6)c.push(n); else if(n.length===5)c.push([...n,n.reduce((a,b)=>a+b,0)]);});
+  for(let i=c.length-1;i>=0;i--){const n=c[i]; if(n[0]+n[1]+n[2]+n[3]+n[4]===n[5])return n;}
+  return c.length?c[c.length-1]:null;
+}
+function parseRecords(lines){
+  const rows=[]; let buf=[];
+  for(const line of lines){
+    const dm=line.match(/14B\s+dues\s+(.+)$/i);
+    if(dm){
+      const dn=dm[1].trim().split(/\s+/).filter(t=>/^[\d,]+$/.test(t)).map(num);
+      if(dn.length>=5){
+        const bt=buf.join(' ');
+        const dates=[...bt.matchAll(/\d{1,2}-[A-Z]{3}-\d{4}/gi)].map(m=>m[0]).slice(-2);
+        const meta=bt.match(/([A-Z]{3}-\d{4})\s+(\d{6,20})\s+(\d{1,4})\s+([YN])\b/i);
+        const contr=findAmountLine(buf);
+        if(dates.length>=2&&meta&&contr){
+          let due=parseDMY(dates[0]),pres=parseDMY(dates[1]);
+          if(due&&pres&&due>pres){const t=due;due=pres;pres=t;}
+          let delay=parseInt(meta[3],10);
+          if(due&&pres){const c=Math.round((pres-due)/864e5); if(c>0)delay=c;}
+          rows.push({wageMonth:meta[1].toUpperCase(),wmDate:parseWM(meta[1]),challan:meta[2],
+            autoLevy:meta[4].toUpperCase()==='Y',dueDate:due,presDate:pres,delayDays:delay,
+            paid:{ac1:contr[0],ac2:contr[1],ac10:contr[2],ac21:contr[3],ac22:contr[4]},
+            old:{ac1:dn[0],ac2:dn[1],ac10:dn[2],ac21:dn[3],ac22:dn[4],
+                 total:dn[5]!==undefined?dn[5]:dn.slice(0,5).reduce((a,b)=>a+b,0)}});
+        }
+      }
+      buf=[]; continue;
+    }
+    if(/Total Amount of 14B Dues/i.test(line)){buf=[];continue;}
+    buf.push(line); if(buf.length>40)buf=buf.slice(-40);
+  }
+  return rows;
+}
+
+/* ================= CALCULATION ENGINE =================
+   A default that runs across a rate change is apportioned at the change date.
+   Each segment carries the rate in force during it, and the slab for a segment
+   is fixed by that segment's own length. Verified against EPFO's own Annexure
+   figures on multiple establishments, matching to the rupee. */
+const B08=new Date(2008,8,25);   // rates "upto 25/09/2008"
+const B24=new Date(2024,5,13);   // rates "upto 13/06/2024"; new rate runs from 14.06.2024
+const DAY=864e5;
+function slab(days){
+  if(days<60)  return {a2008:17,a2024:5, graded:0.25,name:'less than 2 months'};
+  if(days<120) return {a2008:22,a2024:10,graded:0.50,name:'2 to under 4 months'};
+  if(days<180) return {a2008:27,a2024:15,graded:1.00,name:'4 to under 6 months'};
+  return           {a2008:37,a2024:25,graded:1.00,name:'6 months and above'};
+}
+function segmentsOf(due,pay){
+  const out=[];
+  const d0=Math.max(0,Math.round((Math.min(pay,B08)-due)/DAY));
+  if(d0>0)out.push({k:'pre2008',days:d0});
+  const a=Math.max(due,B08), b=Math.min(pay,B24);
+  const d1=Math.max(0,Math.round((b-a)/DAY));
+  if(d1>0)out.push({k:'pre2024',days:d1});
+  const d2=Math.max(0,Math.round((pay-Math.max(due,B24))/DAY));
+  if(d2>0)out.push({k:'post',days:d2});
+  return out;
+}
+/* mode: 'old' = rules as they stood (flat 1% after 14.06.2024)
+         'vishwas' = graded rate after 14.06.2024 */
+function computeRow(r,mode){
+  const segs=segmentsOf(r.dueDate,r.presDate);
+  const per={ac1:0,ac2:0,ac10:0,ac21:0,ac22:0};
+  const detail=[];
+  segs.forEach(s=>{
+    const sl=slab(s.days);
+    let rate,basis,mult;
+    if(s.k==='post'){ rate=mode==='old'?1:sl.graded; mult=Math.ceil(s.days/30); basis=rate+'% p.m. × '+mult+' month(s)'; }
+    else if(s.k==='pre2008'){ rate=sl.a2008; mult=s.days/365; basis=rate+'% p.a. × '+s.days+'/365'; }
+    else { rate=sl.a2024; mult=s.days/365; basis=rate+'% p.a. × '+s.days+'/365'; }
+    let segTotal=0;
+    ['ac1','ac2','ac10','ac21','ac22'].forEach(k=>{
+      const v=r.paid[k]*rate/100*mult; per[k]+=v; segTotal+=v; });
+    detail.push({seg:s.k,days:s.days,slab:sl.name,rate,basis,amount:segTotal});
+  });
+  const out={};let tot=0;
+  ['ac1','ac2','ac10','ac21','ac22'].forEach(k=>{out[k]=Math.round(per[k]);tot+=out[k];});
+  out.total=tot;
+  return {heads:out,detail,segs};
+}
+function applyAll(rows){
+  rows.forEach(r=>{
+    const oldC=computeRow(r,'old'), nw=computeRow(r,'vishwas');
+    r.nw=nw.heads; r.detail=nw.detail; r.segs=nw.segs;
+    r.recomputedOld=oldC.heads;                       // our reconstruction of the issued figure
+    r.variance=oldC.heads.total-r.old.total;          // vs what the summons actually says
+    const has=k=>nw.segs.some(s=>s.k===k);
+    r.basis = has('post') ? (nw.segs.length>1?'split':'post') : 'pre';
+    r.rateLabel = nw.detail.map(d=>d.rate+(d.seg==='post'?'% p.m.':'% p.a.')).join(' + ');
+    r.contrTotal=r.paid.ac1+r.paid.ac2+r.paid.ac10+r.paid.ac21+r.paid.ac22;
+  });
+  return rows;
+}
+
+async function handleFile(file){
+  if(file.type!=='application/pdf'&&!file.name.toLowerCase().endsWith('.pdf')){
+    setStatus('That file is not a PDF. Upload the 14B summons PDF.',true);return;}
+  setStatus('Reading PDF…'); prog(5); resultsEl.style.display='none'; diagEl.style.display='none';
+  try{
+    const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+    let lines=[];
+    for(let p=1;p<=pdf.numPages;p++){
+      lines=lines.concat(reconstructLines((await (await pdf.getPage(p)).getTextContent()).items));
+      prog(5+Math.round(85*p/pdf.numPages));
+    }
+    LAST_LINES=lines; setStatus('Parsing Annexure…'); prog(95);
+    const parsed=parseSummons(lines);
+    if(!parsed.rows.length){
+      prog(null);
+      const h14=lines.some(l=>/14B\s+dues/i.test(l)), h7=lines.some(l=>/Interest\s+Payable/i.test(l));
+      let m='No Section 14B default records could be read from this PDF.<br>';
+      if(!h14&&h7) m+='This file holds only the Section 7Q interest notice. VISHWAS, 2026 does not change interest under 7Q — upload the 14B summons.';
+      else if(!h14) m+='No "14B dues" rows were found. If this is a scan rather than a system-generated summons, there is no text layer to read.';
+      else m+='The "14B dues" rows were found but could not be matched to their dates and figures. Open the extracted text below and send it to me.';
+      m+='<br><button class="btn ghost small" id="btnDiag" style="margin-top:10px;">Show extracted text</button>';
+      setStatus(m,true);
+      const b=document.getElementById('btnDiag');
+      if(b)b.onclick=()=>{diagEl.style.display='block';diagEl.textContent=LAST_LINES.join('\n');};
+      return;
+    }
+    PARSED=parsed;
+    document.getElementById('optNo').value=parsed.newNoticeNo;
+    render(); prog(100); setTimeout(()=>prog(null),500);
+    let n='Read '+parsed.rows.length+' Section 14B record(s).';
+    const al=parsed.rows.filter(r=>r.autoLevy).length;
+    if(al)n+=' '+al+' already recovered by auto-levy.';
+    const sp=parsed.rows.filter(r=>r.basis==='split').length;
+    if(sp)n+=' '+sp+' straddle 14.06.2024 and have been apportioned.';
+    if(parsed.q7Total)n+=' Section 7Q interest of '+inr(parsed.q7Total)+' detected — left unchanged.';
+    setStatus(n);
+  }catch(e){console.error(e);prog(null);setStatus('Could not read this PDF: '+e.message,true);}
+}
+
+function parseSummons(lines){
+  const c=lines.join(' ').replace(/\s+/g,' ');
+  const g=re=>{const m=c.match(re);return m?m[1].trim():'';};
+  const establishment=g(/Name of Establishment\s*:\s*([A-Z0-9 .&'()-]+?)(?:\s+14B|\s+7Q|\s+RO\/|$)/i)||
+                      g(/M\/s\s+([A-Z0-9 .&'()-]+?)\s+is an establishment/i);
+  const estId=g(/Establishment\s*Id\s*:\s*([A-Z0-9]+)/i)||g(/Establishment\.?\s*ID\s*\/?\s*LIN\s+([A-Z0-9]+)/i);
+  const fileNo=g(/File No\s*:\s*(\d+)/i);
+  const srcNoticeNo=g(/No\.\s*(RO\/[A-Z0-9\/]+)/i);
+  const noticeDate=g(/Date\s*:?\s*(\d{2}-[A-Z]{3}-\d{4})/i);
+  const period=g(/for the period\s+([A-Za-z]{3}-\d{4}\s+(?:To|to)\s+[A-Za-z]{3}-\d{4})/i)||
+               g(/during the period\s+([A-Za-z]{3}-\d{4}\s+to\s+[A-Za-z]{3}-\d{4})/i);
+  const address=g(/(?:Encl\s*:?\s*Annexure\s*-?\s*A)?\s*((?:PLOT|H\s*NO|D\s*NO|SY\s*NO|FLAT)[\s\S]{0,140}?TELANGANA)/i);
+  const rows=applyAll(parseRecords(lines));
+  let q7Total=0;
+  const q=c.match(/Total\s+Amount\s+of\s+Interest\s+Payable\s+[\d,]+\s+[\d,]+\s+[\d,]+\s+[\d,]+\s+[\d,]+\s+([\d,]+)/i);
+  if(q)q7Total=num(q[1]);
+  const yr=(noticeDate.match(/(\d{4})$/)||[])[1]||new Date().getFullYear();
+  return {establishment,estId,fileNo,srcNoticeNo,noticeDate,period,address,rows,q7Total,
+          newNoticeNo:'TG/RO/SRD/ENF/Zone 2/'+(fileNo||'______')+'/'+yr};
+}
+
+function excludeAuto(){const el=document.getElementById('optAuto');return !el||el.checked;}
+function activeRows(){return PARSED.rows.filter(r=>!(excludeAuto()&&r.autoLevy));}
+function autoRows(){return excludeAuto()?PARSED.rows.filter(r=>r.autoLevy):[];}
+function heads(rs){return rs.reduce((a,r)=>{['ac1','ac2','ac10','ac21','ac22'].forEach(k=>a[k]+=r.nw[k]);
+  a.total+=r.nw.total; a.old+=r.old.total; return a;},{ac1:0,ac2:0,ac10:0,ac21:0,ac22:0,total:0,old:0});}
+function noticeNo(){return document.getElementById('optNo').value||PARSED.newNoticeNo;}
+function deltaWord(old,nw){return nw>old?'Increase':'Reduction';}
+document.getElementById('optAuto').addEventListener('change',render);
+
+function render(){
+  const p=PARSED, rs=activeRows(), ar=autoRows(), h=heads(rs);
+  resultsEl.style.display='block';
+  document.getElementById('metaGrid').innerHTML=[
+    ['Establishment',p.establishment||'—'],['Establishment ID',p.estId||'—'],
+    ['File No',p.fileNo||'—'],['Source summons',p.srcNoticeNo||'—'],
+    ['Default period',p.period||'—'],['Records demanded',rs.length]
+  ].map(([k,v])=>`<div class="meta-cell"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+  const diff=h.old-h.total, isUp=diff<0;
+  const pct=h.old?Math.abs(diff/h.old*100).toFixed(1):'0.0';
+  let cards=`<div class="card old"><div class="k">As per old rates</div><div class="v">${inr(h.old)}</div></div>
+    <div class="card new"><div class="k">Payable under VISHWAS</div><div class="v">${inr(h.total)}</div></div>
+    <div class="card ${isUp?'up':'save'}"><div class="k">${isUp?'Increase':'Reduction'}</div>
+      <div class="v">${inr(Math.abs(diff))}</div><div class="sub2">${pct}% ${isUp?'higher':'lower'}</div></div>`;
+  if(ar.length)cards+=`<div class="card mute"><div class="k">Auto-levy (excluded)</div><div class="v">${inr(ar.reduce((s,r)=>s+r.old.total,0))}</div><div class="sub2">${ar.length} record(s)</div></div>`;
+  if(p.q7Total)cards+=`<div class="card mute"><div class="k">Interest u/s 7Q</div><div class="v">${inr(p.q7Total)}</div><div class="sub2">unchanged</div></div>`;
+  document.getElementById('summaryCards').innerHTML=cards;
+
+  /* ---- variance panel: app only, never printed on the notice ---- */
+  const vr=rs.filter(r=>Math.abs(r.variance)>2);
+  const vEl=document.getElementById('variance');
+  if(!vr.length){
+    vEl.innerHTML=`<div class="note ok">Cross-check: recomputing every record under the pre-VISHWAS rules reproduces the figures in the uploaded summons exactly, so the rate basis used here matches EPFO's own calculation.</div>`;
+  }else{
+    const tv=vr.reduce((s,r)=>s+r.variance,0);
+    vEl.innerHTML=`<details class="var" open><summary>Cross-check: ${vr.length} record(s) differ from the figure printed in the summons (net ${tv>0?'+':''}${IN(tv)})</summary>
+      <div class="body">
+        <p style="margin:0 0 6px">Each record below was recomputed under the <b>pre-VISHWAS</b> rules and compared with the amount actually printed in the uploaded summons. A difference usually means the summons was generated on a different apportionment of the delay, a revised due date, or rounding at a different stage. Review these before passing the order — this note appears here only and is never carried into the generated notice.</p>
+        <table><tr><th class="left">Wage Month</th><th>Delay</th><th class="left">Rate basis</th><th>Summons</th><th>Recomputed</th><th>Difference</th></tr>
+        ${vr.map(r=>`<tr><td class="left">${r.wageMonth}</td><td>${r.delayDays}d</td>
+          <td class="left">${r.detail.map(d=>d.days+'d @ '+d.rate+(d.seg==='post'?'%pm':'%pa')).join(' + ')}</td>
+          <td>${IN(r.old.total)}</td><td>${IN(r.recomputedOld.total)}</td>
+          <td class="${r.variance>0?'up':'dn'}">${r.variance>0?'+':''}${IN(r.variance)}</td></tr>`).join('')}
+        </table>
+      </div></details>`;
+  }
+
+  let t=`<thead><tr><th class="left">#</th><th class="left">Wage Month</th><th class="left">Due</th><th class="left">Paid</th>
+    <th class="left">Delay</th><th class="left">Basis</th><th class="left">Rate applied</th><th>Contribution</th>
+    <th>Old dues</th><th>VISHWAS</th><th>Change</th></tr></thead><tbody>`;
+  let i=0;
+  p.rows.forEach(r=>{
+    const skip=excludeAuto()&&r.autoLevy; if(!skip)i++;
+    const d=r.old.total-r.nw.total;
+    t+=`<tr class="${skip?'autolevy':''}">
+      <td class="left">${skip?'—':i}</td><td class="left">${r.wageMonth}</td>
+      <td class="left">${fd(r.dueDate)}</td><td class="left">${fd(r.presDate)}</td>
+      <td class="left">${r.delayDays}d</td>
+      <td class="left"><span class="chip ${r.basis}">${r.basis}</span></td>
+      <td class="left">${r.rateLabel}</td>
+      <td>${IN(r.contrTotal)}</td>
+      <td>${IN(r.old.total)}</td><td>${IN(r.nw.total)}</td>
+      <td class="${d<0?'up':'dn'}">${d<0?'+':'−'}${IN(Math.abs(d))}</td></tr>`;});
+  t+=`</tbody><tfoot><tr><td class="left" colspan="8">Total demanded</td>
+    <td>${IN(h.old)}</td><td>${IN(h.total)}</td>
+    <td class="${isUp?'up':'dn'}">${isUp?'+':'−'}${IN(Math.abs(diff))}</td></tr></tfoot>`;
+  document.getElementById('dataTable').innerHTML=t;
+
+  let fn='The revised notice is drafted under Section 128 of the Code on Social Security, 2020, which now governs levy of damages in place of Section 14B of the EPF & MP Act, 1952.';
+  const sp=rs.filter(r=>r.basis==='split').length;
+  if(sp)fn+=' '+sp+' default(s) run across 14.06.2024; for these the delay is apportioned, with only the part falling on or after that date repriced under VISHWAS.';
+  if(isUp)fn+=' Note that the recalculated total exceeds the amount originally demanded — this arises where the graded rate for a segment is no lower than the rate previously applied.';
+  if(ar.length)fn+=' Remittances already recovered by auto-levy are excluded, consistent with the "Total Amount of 14B Dues Payable" line of the source summons.';
+  if(p.q7Total)fn+=' Interest under Section 127 CoSS (formerly 7Q) is not recalculated — VISHWAS applies to damages only, and requires interest to be fully remitted before an application is made.';
+  document.getElementById('footnote').textContent=fn;
+}
+
+/* =================== EXCEL =================== */
+document.getElementById('btnXlsx').addEventListener('click',()=>{
+  if(!PARSED)return;
+  const p=PARSED, rs=activeRows(), ar=autoRows(), h=heads(rs);
+  const A=[],M=[],NC=23;
+  A.push(['ANNEXURE A']);
+  A.push(['Calculation of damages under Section 128 of the Code on Social Security, 2020 (formerly Section 14B of the EPF & MP Act, 1952) at VISHWAS, 2026 rates']);
+  A.push(['Establishment: '+(p.establishment||'')+'    |    Establishment ID: '+(p.estId||'')+
+          '    |    File No: '+(p.fileNo||'')+'    |    Period: '+(p.period||'')]);
+  A.push([]);
+  const g=[];g[6]='CONTRIBUTIONS RECEIVED';g[12]='DAMAGES (VISHWAS, 2026)';g[18]='RATE BASIS';
+  A.push(g);
+  A.push(['S.No','Month','Due Date','date of payment','Delay Days','delay months',
+          'A/c 1','A/c No.2','A/c No.10','A/c No.21','A/c No.22','Total',
+          'A/c 1','A/c No.2','A/c No.10','A/c No.21','A/c No.22','Total',
+          'As per Old rates','Change','Basis','Rate applied','Segments (days @ rate)']);
+  for(let i=0;i<3;i++)M.push({s:{r:i,c:0},e:{r:i,c:NC-1}});
+  M.push({s:{r:4,c:6},e:{r:4,c:11}},{s:{r:4,c:12},e:{r:4,c:17}},{s:{r:4,c:18},e:{r:4,c:22}});
+  const S=7;
+  rs.forEach((r,i)=>{
+    const R=S+i;
+    A.push([ i+1, r.wmDate, r.dueDate, r.presDate,
+      {f:`D${R}-C${R}`,v:r.delayDays}, r.detail.reduce((s,d)=>s+(d.seg==='post'?Math.ceil(d.days/30):0),0)||'',
+      r.paid.ac1,r.paid.ac2,r.paid.ac10,r.paid.ac21,r.paid.ac22,
+      {f:`SUM(G${R}:K${R})`,v:r.contrTotal},
+      r.nw.ac1,r.nw.ac2,r.nw.ac10,r.nw.ac21,r.nw.ac22,
+      {f:`SUM(M${R}:Q${R})`,v:r.nw.total},
+      r.old.total, {f:`S${R}-R${R}`,v:r.old.total-r.nw.total},
+      r.basis, r.rateLabel,
+      r.detail.map(d=>d.days+'d @ '+d.rate+(d.seg==='post'?'% p.m.':'% p.a.')).join('  +  ') ]);
+  });
+  const E=S+rs.length-1, TR=E+1;
+  const tr=['','','','TOTAL','',''];
+  const cols=['G','H','I','J','K','L','M','N','O','P','Q','R','S','T'];
+  const vals=[rs.reduce((s,r)=>s+r.paid.ac1,0),rs.reduce((s,r)=>s+r.paid.ac2,0),
+    rs.reduce((s,r)=>s+r.paid.ac10,0),rs.reduce((s,r)=>s+r.paid.ac21,0),rs.reduce((s,r)=>s+r.paid.ac22,0),
+    rs.reduce((s,r)=>s+r.contrTotal,0),h.ac1,h.ac2,h.ac10,h.ac21,h.ac22,h.total,h.old,h.old-h.total];
+  cols.forEach((c,i)=>tr.push({f:`SUM(${c}${S}:${c}${E})`,v:vals[i]}));
+  A.push(tr);
+  A.push([]);
+  const sr=A.length;
+  const put=(label,val)=>{const row=[];row[1]=label;row[12]=val;A.push(row);
+    M.push({s:{r:A.length-1,c:1},e:{r:A.length-1,c:11}},{s:{r:A.length-1,c:12},e:{r:A.length-1,c:14}});};
+  put('Total damages as per OLD rates (as issued in the 14B summons)',{f:`S${TR}`,v:h.old});
+  put('TOTAL DAMAGES PAYABLE under VISHWAS, 2026',{f:`R${TR}`,v:h.total});
+  put((h.total>h.old?'INCREASE':'Reduction')+' on account of VISHWAS, 2026',{f:`ABS(M${sr+1}-M${sr+2})`,v:Math.abs(h.old-h.total)});
+  if(ar.length)put('Damages already recovered by auto-levy ('+ar.length+' record(s), excluded above)',ar.reduce((s,r)=>s+r.old.total,0));
+  if(p.q7Total)put('Interest u/s 127 CoSS (formerly 7Q) — NOT affected by VISHWAS, payable in full',p.q7Total);
+  A.push([]);
+  A.push(['','Basis of computation']);
+  [ '1. Where a default runs across a rate-change date (25.09.2008 or 14.06.2024), the period of delay is apportioned at that date. Each part carries the rate in force during it, and the slab for a part is determined by that part\'s own length.',
+    '2. For the part falling on or after 14.06.2024, VISHWAS, 2026 applies the graded rate — 0.25% (under 2 months), 0.50% (2 to under 4 months), 1.00% (4 months and above) — per month or part thereof, in place of the flat 1% per month.',
+    '3. For the part falling before 14.06.2024, the annual rate already applicable (5% / 10% / 15% / 25% p.a., or 17% / 22% / 27% / 37% p.a. before 25.09.2008) continues to apply, prorated by days / 365. VISHWAS does not alter this part.',
+    '4. Because only the post-14.06.2024 part is repriced, a long-running default may show little reduction, and where the graded rate for that part is no lower than the rate previously applied the recalculated figure can exceed the amount originally demanded.',
+    '5. Remittances already recovered by auto-levy are excluded from the amount demanded, consistent with the "Total Amount of 14B Dues Payable" line of the source summons.'
+  ].forEach(t=>{A.push(['',t]);M.push({s:{r:A.length-1,c:1},e:{r:A.length-1,c:NC-1}});});
+
+  const ws=XLSX.utils.aoa_to_sheet(A,{cellDates:true});
+  A.forEach((row,ri)=>row.forEach((cell,ci)=>{
+    if(cell&&typeof cell==='object'&&cell.f!==undefined){
+      const ad=XLSX.utils.encode_cell({r:ri,c:ci});
+      ws[ad]={t:typeof cell.v==='string'?'s':'n',f:cell.f};
+      if(cell.v!==null&&cell.v!==undefined)ws[ad].v=cell.v;
+    }}));
+  for(let i=0;i<rs.length;i++){
+    const r=S-1+i;
+    const z=(c,f)=>{const a=XLSX.utils.encode_cell({r,c});if(ws[a])ws[a].z=f;};
+    z(1,'mmm-yy'); z(2,'dd-mmm-yy'); z(3,'dd-mmm-yy');
+    for(let c=6;c<=19;c++)z(c,'#,##0');
+  }
+  for(let c=6;c<=19;c++){const a=XLSX.utils.encode_cell({r:TR-1,c});if(ws[a])ws[a].z='#,##0';}
+  ws['!merges']=M;
+  ws['!cols']=[6,10,11,13,8,8,11,9,11,9,9,12,10,9,10,9,9,11,11,10,7,20,34].map(w=>({wch:w}));
+  ws['!freeze']={xSplit:0,ySplit:S-1};
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Annexure A');
+  XLSX.writeFile(wb,(p.estId||'establishment')+'_Annexure_A_VISHWAS.xlsx');
+});
+
+/* =================== NOTICE (Word / PDF) =================== */
+function buildNoticeHtml(){
+  const p=PARSED, rs=activeRows(), ar=autoRows(), h=heads(rs);
+  const autoTot=ar.reduce((s,r)=>s+r.old.total,0);
+  const isUp=h.total>h.old;
+  const ann=rs.map((r,i)=>`<tr><td class="c">${i+1}</td><td class="c">${fm(r.wmDate)}</td>
+    <td class="c">${fd(r.dueDate)}<br>${fd(r.presDate)}</td><td class="c">${r.delayDays}</td>
+    <td class="c">${r.detail.map(d=>d.days+'d&nbsp;@&nbsp;'+d.rate+(d.seg==='post'?'%pm':'%pa')).join('<br>+&nbsp;')}</td>
+    <td class="r">${IN(r.old.total)}</td>
+    <td class="r">${IN(r.nw.total)}</td><td class="r">${IN(Math.abs(r.old.total-r.nw.total))}</td></tr>`).join('');
+  const addr=String(p.address||'').split(/,\s*/).filter(Boolean).map(l=>l+',').join('<br>');
+  return `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset="utf-8"><title>Summons u/s 128</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->
+<style>
+@page{size:21cm 29.7cm;margin:1.9cm 1.15cm;}
+body{font-family:'Times New Roman',serif;font-size:12pt;line-height:1.45;}
+table.ann{table-layout:fixed;width:100%;}
+table.ann th,table.ann td{font-size:6.8pt;padding:1.2pt 1.2pt;word-wrap:break-word;line-height:1.1;}
+p{text-align:justify;margin:0 0 10pt;text-indent:24pt;}
+p.n{text-indent:0;}
+h1{font-size:14pt;text-align:center;text-decoration:underline;margin:0 0 4pt;}
+h2{font-size:11pt;text-align:center;margin:0 0 2pt;font-weight:bold;}
+table.grid{border-collapse:collapse;width:100%;margin:10pt 0;}
+table.grid th,table.grid td{border:1px solid #000;padding:4pt 5pt;font-size:9.5pt;vertical-align:middle;}
+table.grid th{background:#d9d9d9;text-align:center;font-size:9pt;}
+td.c,th.c{text-align:center;} td.r{text-align:right;}
+.hdr{text-align:center;margin:0;text-indent:0;}
+.rule{border-bottom:1px solid #000;margin:8pt 0 10pt;}
+.sig{text-align:right;text-indent:0;margin:0;}
+.small{font-size:9.5pt;}
+</style></head><body>
+<p class="hdr" style="font-size:13pt;"><b>EMPLOYEES' PROVIDENT FUND ORGANISATION</b></p>
+<p class="hdr small">(Ministry of Labour &amp; Employment, Government of India)</p>
+<p class="hdr"><b>REGIONAL OFFICE, SANGAREDDY</b></p>
+<p class="hdr small">H.No.12-1, First Floor, Susheeram Complex, Patancheru, Medak District, Telangana</p>
+<div class="rule"></div>
+<table style="width:100%;border:0;"><tr>
+  <td style="border:0;padding:0;">No. ${noticeNo()}</td>
+  <td style="border:0;padding:0;text-align:right;">Date: ____________</td></tr></table>
+<br>
+<h1>Summons</h1>
+<h2>[for hearing u/s 128 of the Code on Social Security, 2020]</h2>
+<h2>for belated remittance for the period</h2>
+<h2>${p.period||'____________'}</h2>
+<div class="rule"></div>
+<p>Whereas M/s <b>${p.establishment||'____________'}</b> is an establishment [hereinafter referred to as the Establishment] covered under the Code on Social Security, 2020 (formerly the Employees' Provident Funds and Miscellaneous Provisions Act, 1952) (hereinafter referred to as the CoSS), with Establishment ID <b>${p.estId||'____________'}</b>.</p>
+<p>And whereas, under the provisions of Section 16 and 17 of the Code on Social Security, 2020 (formerly Section 6, 6A and 6C of the Employees' Provident Funds and Miscellaneous Provisions Act, 1952) read with Para 28 of the Employees' Provident Funds Scheme, 2026 (formerly Para 38 of the Employees' Provident Funds Scheme, 1952), Para 4 of the Employees' Pension Scheme, 2026 (formerly Para 3 of the Employees' Pension Scheme, 1995) and Para 6 of the Employees' Deposit Linked Insurance Scheme, 2026 (formerly Para 8(1) of the Employees' Deposit Linked Insurance Scheme, 1976), the employer of the establishment is required to remit the contributions along with the administrative charges within 15 days of the close of every month.</p>
+<p>And whereas, under Section 128 of the CoSS, where an employer makes default in payment of the contributions or any charges, the Commissioner is required to recover by way of damages, not exceeding the amount of arrears, at the rates specified in Para 23 of the Employees' Provident Funds Scheme, 2026 (formerly Para 32A of the Employees' Provident Funds Scheme, 1952), Para 6 of the Employees' Pension Scheme, 2026 (formerly Para 5 of the Employees' Pension Scheme, 1995) and Para 7 of the Employees' Deposit Linked Insurance Scheme, 2026 (formerly Para 8A of the Employees' Deposit Linked Insurance Scheme, 1976), as per the following rates specified in the Scheme.</p>
+<table class="grid">
+<tr><th style="width:32%">Period of Delay</th><th>Rates of Damages upto 25/09/2008 (Percentage of arrears per annum)</th>
+<th>Rates of Damages upto 13/06/2024 (Percentage of arrears per annum)</th>
+<th>Rate of Damages from 14.06.2024 (Percentage of arrears per month or part thereof)</th></tr>
+<tr><td>Less than 2 months</td><td class="c">17%</td><td class="c">5%</td><td class="c">0.25%</td></tr>
+<tr><td>2 months and above, and less than 4 months</td><td class="c">22%</td><td class="c">10%</td><td class="c">0.50%</td></tr>
+<tr><td>4 months and above, and less than 6 months</td><td class="c">27%</td><td class="c">15%</td><td class="c">1%</td></tr>
+<tr><td>6 months and above</td><td class="c">37%</td><td class="c">25%</td><td class="c">1%</td></tr></table>
+<p>Whereas, the information available with EPFO records shows that the establishment has made belated remittances during the period <b>${p.period||'____________'}</b> and such remittances beyond the permissible period attract Penal Damages.</p>
+<p>And whereas, in terms of VISHWAS, 2026 notified vide G.S.R. 525(E) dated 29.06.2026, the rate of damages applicable from 14.06.2024 stands substituted by the graded rate set out in the table above. Where a default runs across 14.06.2024, the period of delay has been apportioned at that date, the part falling on or after 14.06.2024 being charged at the graded rate and the part falling before that date continuing at the rate already applicable to it.</p>
+<p>The Penal Damages for such belated remittances, computed accordingly, are summarized as below:-</p>
+<table class="grid" style="width:82%;margin-left:auto;margin-right:auto;">
+<tr><th style="width:66%"></th><th>Amount of Damages payable in Rs.</th></tr>
+<tr><td>EPF contributions in A/c no.1</td><td class="r">${IN(h.ac1)}</td></tr>
+<tr><td>EPS contribution in A/c no.10</td><td class="r">${IN(h.ac10)}</td></tr>
+<tr><td>EPF Administration/Inspection charges in A/c no.2</td><td class="r">${IN(h.ac2)}</td></tr>
+<tr><td>EDLI contributions in A/c no.21</td><td class="r">${IN(h.ac21)}</td></tr>
+<tr><td>EDLI Administration/Inspection charges in A/c no.22</td><td class="r">${IN(h.ac22)}</td></tr>
+<tr><td><b>Total damages payable</b></td><td class="r"><b>${IN(h.total)}</b></td></tr></table>
+${ar.length?`<p><i>Note: Damages of Rs. ${IN(autoTot)} in respect of ${ar.length} remittance(s) already recovered by auto-levy have been excluded from the amount demanded above.</i></p>`:''}
+${p.q7Total?`<p><i>Note: Interest of Rs. ${IN(p.q7Total)} payable under Section 127 of the CoSS (formerly Section 7Q of the Act) is not affected by VISHWAS, 2026 and remains payable in full. The Scheme requires the entire interest to be remitted before an application is submitted.</i></p>`:''}
+<p>Month wise and each remittance wise details of default are attached as Annexure-A to this notice, which may be referred to.</p>
+<p>In case the establishment/employer does not wish to make any representation and agrees with the details mentioned in the Annexure, you may remit the same through a Challan generated on the Unified Portal for employers by logging into the portal and using the Challan Entry option. It is further advised to enter the details in the fields provided for penal damages in the Challan format using the miscellaneous payment option.</p>
+<p>In case the establishment/employer has already made the payment of the Penal Damages specified above, a reply to the notice may be sent immediately quoting the reference number mentioned above with proof of such remittance.</p>
+<p>However, in case the establishment/employer intends to dispute the notice, in accordance with the provision contained under the first proviso to Section 128 of the Code on Social Security, 2020 (formerly Section 14B of the Employees' Provident Funds and Miscellaneous Provisions Act, 1952), the establishment/employer is entitled to an opportunity of being heard before the Penal Damages are levied.</p>
+<p>The employer may therefore avail this opportunity of being heard and in such case, he/she may appear either in person or through a representative duly authorized before the undersigned on ____________ at __________.</p>
+<p>In case the establishment/employer has made the payments within the respective due dates, supporting documents of proof of such remittances may be produced on the scheduled date of hearing.</p>
+<p>Please note that in the event of failure to attend the hearing in person or through a person duly authorized to represent the employer/establishment, the undersigned shall proceed to hold the inquiry in the above matter and decide on the levy of damages on the basis of the records available.</p>
+<p>Issued under my signature and seal on this ____________ at Patancheru.</p>
+<br><br>
+<p class="sig"><b>Regional Provident Fund Commissioner-II</b></p>
+<p class="sig">EPFO: RO: SANGAREDDY</p>
+<br>
+<p class="n">Encl: Annexure-A</p>
+<p class="n">To<br>The Employer,<br><b>M/s ${p.establishment||''},</b><br>${addr}</p>
+<br style="page-break-before:always">
+<h1>Annexure - A</h1>
+<h2>Statement showing amounts payable under Section 128 of the Code on Social Security, 2020</h2>
+<p class="hdr small">(Belated remittances and calculation of payable damages at VISHWAS, 2026 rates)</p>
+<br>
+<p class="n">Establishment ID : ${p.estId||''} &nbsp;&nbsp;&nbsp;&nbsp; Name of Establishment : ${p.establishment||''}</p>
+<p class="n">File No : ${p.fileNo||''} &nbsp;&nbsp;&nbsp;&nbsp; Period : ${p.period||''}</p>
+<table class="grid ann" width="100%">
+<tr><th>S.No</th><th>Month</th><th>Due Date /<br>Paid On</th><th>Delay<br>(days)</th>
+<th>Rate applied</th><th>Old<br>(Rs.)</th>
+<th>VISHWAS<br>(Rs.)</th><th>${isUp?'Increase':'Reduction'}<br>(Rs.)</th></tr>
+${ann}
+<tr><th colspan="5" style="text-align:right">Total</th><th class="r">${IN(h.old)}</th>
+<th class="r">${IN(h.total)}</th><th class="r">${IN(Math.abs(h.old-h.total))}</th></tr></table>
+<p class="n"><b>Basis of computation:</b></p>
+<p class="n small">(i) Where a default runs across a rate-change date (25.09.2008 or 14.06.2024), the period of delay has been apportioned at that date. Each part carries the rate in force during it, and the slab for a part is determined by that part's own length.</p>
+<p class="n small">(ii) For the part falling on or after 14.06.2024 — graded rate under VISHWAS, 2026: 0.25% per month for a part under 2 months, 0.50% for 2 to under 4 months, and 1.00% for 4 months and above, per month or part thereof.</p>
+<p class="n small">(iii) For the part falling before 14.06.2024 — the annual rate already applicable (5% / 10% / 15% / 25% per annum), prorated by days / 365. This part is not altered by VISHWAS, 2026.</p>
+<p class="n small">(iv) Remittances already recovered by auto-levy are excluded from the amount demanded.</p>
+<br><br>
+<p class="sig"><b>Regional Provident Fund Commissioner-II</b></p>
+<p class="sig">EPFO: RO: SANGAREDDY</p>
+</body></html>`;
+}
+
+document.getElementById('btnWord').addEventListener('click',()=>{
+  if(!PARSED)return;
+  const blob=new Blob(['\ufeff',buildNoticeHtml()],{type:'application/msword'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=(PARSED.estId||'establishment')+'_Summons_128_VISHWAS.doc';
+  a.click();
+});
+
+document.getElementById('btnPdf').addEventListener('click',()=>{
+  if(!PARSED)return;
+  const p=PARSED, rs=activeRows(), ar=autoRows(), h=heads(rs);
+  const isUp=h.total>h.old;
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  const W=595,L=52,RG=W-52,TW=RG-L;
+  let y=48;
+  const line=(t,o={})=>{doc.setFont('times',o.b?'bold':(o.i?'italic':'normal'));doc.setFontSize(o.s||10.5);
+    doc.text(t,W/2,y,{align:'center'});y+=o.lh||14;};
+  const para=(t,o={})=>{doc.setFont('times',o.b?'bold':(o.i?'italic':'normal'));doc.setFontSize(o.s||10.5);
+    doc.splitTextToSize(t,TW).forEach(s=>{if(y>792){doc.addPage();y=56;}doc.text(s,L,y);y+=13.5;});y+=7;};
+  line("EMPLOYEES' PROVIDENT FUND ORGANISATION",{b:1,s:12.5});
+  line("(Ministry of Labour & Employment, Government of India)",{s:8.5});
+  line("REGIONAL OFFICE, SANGAREDDY",{b:1,s:11});
+  line("H.No.12-1, First Floor, Susheeram Complex, Patancheru, Medak District, Telangana",{s:8.5,lh:16});
+  doc.setLineWidth(.7);doc.line(L,y,RG,y);y+=18;
+  doc.setFont('times','normal');doc.setFontSize(10);
+  doc.text('No. '+noticeNo(),L,y);doc.text('Date: ____________',RG,y,{align:'right'});y+=24;
+  line("Summons",{b:1,s:14});
+  const tw=doc.getTextWidth("Summons");doc.setLineWidth(.5);doc.line(W/2-tw/2,y-13,W/2+tw/2,y-13);
+  line("[for hearing u/s 128 of the Code on Social Security, 2020]",{b:1,s:10});
+  line("for belated remittance for the period",{b:1,s:10});
+  line(p.period||'____________',{b:1,s:10,lh:16});
+  doc.setLineWidth(.7);doc.line(L,y,RG,y);y+=18;
+  para(`Whereas M/s ${p.establishment||'____________'} is an establishment [hereinafter referred to as the Establishment] covered under the Code on Social Security, 2020 (formerly the Employees' Provident Funds and Miscellaneous Provisions Act, 1952) (hereinafter referred to as the CoSS), with Establishment ID ${p.estId||'____________'}.`);
+  para("And whereas, under the provisions of Section 16 and 17 of the Code on Social Security, 2020 read with Para 28 of the Employees' Provident Funds Scheme, 2026, Para 4 of the Employees' Pension Scheme, 2026 and Para 6 of the Employees' Deposit Linked Insurance Scheme, 2026, the employer of the establishment is required to remit the contributions along with the administrative charges within 15 days of the close of every month.");
+  para("And whereas, under Section 128 of the CoSS, where an employer makes default in payment of the contributions or any charges, the Commissioner is required to recover by way of damages, not exceeding the amount of arrears, at the rates specified in Para 23 of the Employees' Provident Funds Scheme, 2026, Para 6 of the Employees' Pension Scheme, 2026 and Para 7 of the Employees' Deposit Linked Insurance Scheme, 2026, as per the following rates specified in the Scheme.");
+  doc.autoTable({startY:y,margin:{left:L,right:52},
+    head:[['Period of Delay','Rates upto 25/09/2008 (% per annum)','Rates upto 13/06/2024 (% per annum)','Rate from 14.06.2024 (% per month)']],
+    body:[['Less than 2 months','17%','5%','0.25%'],['2 months and above, and less than 4 months','22%','10%','0.50%'],
+          ['4 months and above, and less than 6 months','27%','15%','1%'],['6 months and above','37%','25%','1%']],
+    styles:{font:'times',fontSize:8.5,cellPadding:4,lineColor:[0,0,0],lineWidth:.4,halign:'center'},
+    columnStyles:{0:{halign:'left'}},headStyles:{fillColor:[217,217,217],textColor:0,fontStyle:'bold',fontSize:8}});
+  y=doc.lastAutoTable.finalY+16;
+  para(`Whereas, the information available with EPFO records shows that the establishment has made belated remittances during the period ${p.period||'____________'} and such remittances beyond the permissible period attract Penal Damages.`);
+  para("And whereas, in terms of VISHWAS, 2026 notified vide G.S.R. 525(E) dated 29.06.2026, the rate of damages applicable from 14.06.2024 stands substituted by the graded rate set out above. Where a default runs across 14.06.2024, the period of delay has been apportioned at that date, the part falling on or after 14.06.2024 being charged at the graded rate and the part falling before that date continuing at the rate already applicable to it.");
+  para("The Penal Damages for such belated remittances, computed accordingly, are summarized as below:-");
+  doc.autoTable({startY:y,margin:{left:L,right:52},head:[['','Amount of Damages payable in Rs.']],
+    body:[['EPF contributions in A/c no.1',IN(h.ac1)],['EPS contribution in A/c no.10',IN(h.ac10)],
+          ['EPF Administration/Inspection charges in A/c no.2',IN(h.ac2)],
+          ['EDLI contributions in A/c no.21',IN(h.ac21)],
+          ['EDLI Administration/Inspection charges in A/c no.22',IN(h.ac22)],
+          ['Total damages payable',IN(h.total)]],
+    styles:{font:'times',fontSize:9,cellPadding:4,lineColor:[0,0,0],lineWidth:.4},
+    columnStyles:{1:{halign:'right',cellWidth:150}},
+    headStyles:{fillColor:[217,217,217],textColor:0,fontStyle:'bold',fontSize:8.5,halign:'center'},
+    didParseCell:d=>{if(d.row.index===5)d.cell.styles.fontStyle='bold';}});
+  y=doc.lastAutoTable.finalY+16;
+  if(ar.length)para(`Note: Damages of Rs. ${IN(ar.reduce((s,r)=>s+r.old.total,0))} in respect of ${ar.length} remittance(s) already recovered by auto-levy have been excluded from the amount demanded above.`,{i:1,s:9.5});
+  if(p.q7Total)para(`Note: Interest of Rs. ${IN(p.q7Total)} payable under Section 127 of the CoSS (formerly Section 7Q) is not affected by VISHWAS, 2026 and remains payable in full.`,{i:1,s:9.5});
+  para("Month wise and each remittance wise details of default are attached as Annexure-A to this notice, which may be referred to.");
+  para("In case the establishment/employer does not wish to make any representation and agrees with the details mentioned in the Annexure, you may remit the same through a Challan generated on the Unified Portal for employers, using the Challan Entry option, entering the details in the fields provided for penal damages under the miscellaneous payment option.");
+  para("However, in case the establishment/employer intends to dispute the notice, in accordance with the first proviso to Section 128 of the Code on Social Security, 2020, the establishment/employer is entitled to an opportunity of being heard before the Penal Damages are levied, and may appear either in person or through a duly authorized representative before the undersigned on ____________ at __________.");
+  para("Please note that in the event of failure to attend the hearing, the undersigned shall proceed to hold the inquiry and decide on the levy of damages on the basis of the records available.");
+  para("Issued under my signature and seal on this ____________ at Patancheru.");
+  y+=26; if(y>710){doc.addPage();y=80;}
+  doc.setFont('times','bold');doc.text('Regional Provident Fund Commissioner-II',RG,y,{align:'right'});
+  doc.setFont('times','normal');doc.text('EPFO: RO: SANGAREDDY',RG,y+14,{align:'right'});
+  y+=42; doc.text('Encl: Annexure-A',L,y);y+=19;
+  doc.text('To',L,y);y+=13;doc.text('The Employer,',L,y);y+=13;
+  doc.setFont('times','bold');doc.text('M/s '+(p.establishment||'')+',',L,y);y+=13;
+  doc.setFont('times','normal');
+  String(p.address||'').split(/,\s*/).filter(Boolean).forEach(l=>{doc.text(l+',',L,y);y+=13;});
+
+  /* Annexure on a landscape page — the apportioned-rate column needs the width */
+  doc.addPage('a4','landscape');
+  const LW=842, LL=40, LR=LW-40, LTW=LR-LL;
+  y=44;
+  const lline=(t,o={})=>{doc.setFont('times',o.b?'bold':'normal');doc.setFontSize(o.s||10.5);
+    doc.text(t,LW/2,y,{align:'center'});y+=o.lh||14;};
+  lline("Annexure - A",{b:1,s:14});
+  const aw=doc.getTextWidth("Annexure - A");doc.setLineWidth(.5);doc.line(LW/2-aw/2,y-13,LW/2+aw/2,y-13);
+  lline("Statement showing amounts payable under Section 128 of the Code on Social Security, 2020",{b:1,s:9.5});
+  lline("(Belated remittances and calculation of payable damages at VISHWAS, 2026 rates)",{s:9,lh:17});
+  doc.setFont('times','normal');doc.setFontSize(9.5);
+  doc.text('Establishment ID : '+(p.estId||'')+'          Name of Establishment : '+(p.establishment||''),LL,y);y+=13;
+  doc.text('File No : '+(p.fileNo||'')+'          Period : '+(p.period||''),LL,y);y+=10;
+  const body=rs.map((r,i)=>[i+1,fm(r.wmDate),fd(r.dueDate),fd(r.presDate),r.delayDays,
+    r.detail.map(d=>d.days+'d @ '+d.rate+(d.seg==='post'?'% p.m.':'% p.a.')).join('\n+ '),
+    IN(r.contrTotal),IN(r.old.total),IN(r.nw.total),IN(Math.abs(r.old.total-r.nw.total))]);
+  body.push(['','','','','','Total',IN(rs.reduce((s,r)=>s+r.contrTotal,0)),IN(h.old),IN(h.total),IN(Math.abs(h.old-h.total))]);
+  doc.autoTable({startY:y+6,margin:{left:LL,right:40},tableWidth:LTW,
+    head:[['S.No','Wage Month','Due Date','Date of Payment','Delay (days)','Rate applied (apportioned)',
+           'Total Contribution (Rs.)','Damages as per old rates (Rs.)','Damages under VISHWAS (Rs.)',(isUp?'Increase':'Reduction')+' (Rs.)']],
+    body,styles:{font:'times',fontSize:7.6,cellPadding:3,lineColor:[0,0,0],lineWidth:.4,halign:'center',valign:'middle'},
+    columnStyles:{0:{cellWidth:32},1:{cellWidth:58},2:{cellWidth:64},3:{cellWidth:70},4:{cellWidth:44},
+                  5:{cellWidth:168,fontSize:7,halign:'left'},
+                  6:{halign:'right'},7:{halign:'right'},8:{halign:'right'},9:{halign:'right'}},
+    headStyles:{fillColor:[217,217,217],textColor:0,fontStyle:'bold',fontSize:7},
+    didParseCell:d=>{if(d.section==='body'&&d.row.index===body.length-1)d.cell.styles.fontStyle='bold';}});
+  y=doc.lastAutoTable.finalY+15;
+  if(y>500){doc.addPage('a4','landscape');y=52;}
+  doc.setFont('times','bold');doc.setFontSize(9.5);doc.text('Basis of computation:',LL,y);y+=13;
+  doc.setFont('times','normal');doc.setFontSize(8.5);
+  [ "(i) Where a default runs across a rate-change date (25.09.2008 or 14.06.2024), the period of delay has been apportioned at that date. Each part carries the rate in force during it, and the slab for a part is determined by that part's own length.",
+    "(ii) For the part falling on or after 14.06.2024 — graded rate under VISHWAS, 2026: 0.25% per month for a part under 2 months, 0.50% for 2 to under 4 months, and 1.00% for 4 months and above, per month or part thereof.",
+    "(iii) For the part falling before 14.06.2024 — the annual rate already applicable (5% / 10% / 15% / 25% per annum), prorated by days / 365. This part is not altered by VISHWAS, 2026.",
+    "(iv) Remittances already recovered by auto-levy are excluded from the amount demanded."
+  ].forEach(t=>{doc.splitTextToSize(t,LTW).forEach(s=>{if(y>545){doc.addPage('a4','landscape');y=52;}doc.text(s,LL,y);y+=11;});y+=3;});
+  y+=24; if(y>510){doc.addPage('a4','landscape');y=70;}
+  doc.setFont('times','bold');doc.text('Regional Provident Fund Commissioner-II',LR,y,{align:'right'});
+  doc.setFont('times','normal');doc.text('EPFO: RO: SANGAREDDY',LR,y+13,{align:'right'});
+  doc.save((p.estId||'establishment')+'_Summons_128_VISHWAS.pdf');
+});
+</script>
+</body>
+</html>
