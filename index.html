@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>14B → VISHWAS 2026 Damages Recalculator | EPFO RO Sangareddy</title>
+<title>14B → CoSS 2026 Damages Recalculator | EPFO RO Sangareddy</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -162,7 +162,7 @@
     </div>
     <div class="divider"></div>
     <div>
-      <h1>14B → VISHWAS Recalculator</h1>
+      <h1>14B → CoSS Recalculator</h1>
       <div class="tag">Employees' Provident Fund Organisation · RO Sangareddy</div>
     </div>
   </div>
@@ -171,7 +171,7 @@
 
 <main>
   <h2 class="lede">Upload the 14B summons (CITES Raw File) PDF. <span>Get the revised Section 128 summons</span> and its Annexure — Word, PDF and Excel.</h2>
-  <p class="sub">Reads the month-wise Annexure from a Section 14B summons, reprices each default at the VISHWAS, 2026 rates, and drafts the replacement notice under Section 128 of the Code on Social Security, 2020 together with a working Annexure&#8209;A.</p>
+  <p class="sub">Reads the month-wise Annexure from a Section 14B summons, reprices each default at the CoSS, 2026 rates, and drafts the replacement notice under Section 128 of the Code on Social Security, 2020 together with a working Annexure&#8209;A.</p>
 
   <div class="panel rate-table">
     <table>
@@ -191,7 +191,7 @@
       <p>Where a default runs across <code>25.09.2008</code> or <code>14.06.2024</code>, the delay is apportioned. Each part is charged at the rate in force during that part, and the slab for each part is fixed by that part's own length — not by the total delay.</p>
     </div>
     <div class="how b2">
-      <h4>VISHWAS only touches the post-14.06.2024 part</h4>
+      <h4>CoSS only touches the post-14.06.2024 part</h4>
       <p>The flat <code>1%</code> per month is replaced by the graded <code>0.25 / 0.50 / 1.00%</code>. Everything accruing before 14.06.2024 keeps the annual rate that already applied, so a long-running default may see little or no reduction.</p>
     </div>
   </div>
@@ -348,7 +348,7 @@ function segmentsOf(due,pay){
   return out;
 }
 /* mode: 'old' = rules as they stood (flat 1% after 14.06.2024)
-         'vishwas' = graded rate after 14.06.2024 */
+         'CoSS' = graded rate after 14.06.2024 */
 function computeRow(r,mode){
   const segs=segmentsOf(r.dueDate,r.presDate);
   const per={ac1:0,ac2:0,ac10:0,ac21:0,ac22:0};
@@ -371,7 +371,7 @@ function computeRow(r,mode){
 }
 function applyAll(rows){
   rows.forEach(r=>{
-    const oldC=computeRow(r,'old'), nw=computeRow(r,'vishwas');
+    const oldC=computeRow(r,'old'), nw=computeRow(r,'CoSS');
     r.nw=nw.heads; r.detail=nw.detail; r.segs=nw.segs;
     r.recomputedOld=oldC.heads;                       // our reconstruction of the issued figure
     r.variance=oldC.heads.total-r.old.total;          // vs what the summons actually says
@@ -400,7 +400,7 @@ async function handleFile(file){
       prog(null);
       const h14=lines.some(l=>/14B\s+dues/i.test(l)), h7=lines.some(l=>/Interest\s+Payable/i.test(l));
       let m='No Section 14B default records could be read from this PDF.<br>';
-      if(!h14&&h7) m+='This file holds only the Section 7Q interest notice. VISHWAS, 2026 does not change interest under 7Q — upload the 14B summons.';
+      if(!h14&&h7) m+='This file holds only the Section 7Q interest notice. CoSS, 2026 does not change interest under 7Q — upload the 14B summons.';
       else if(!h14) m+='No "14B dues" rows were found. If this is a scan rather than a system-generated summons, there is no text layer to read.';
       else m+='The "14B dues" rows were found but could not be matched to their dates and figures. Open the extracted text below and send it to me.';
       m+='<br><button class="btn ghost small" id="btnDiag" style="margin-top:10px;">Show extracted text</button>';
@@ -464,7 +464,7 @@ function render(){
   const diff=h.old-h.total, isUp=diff<0;
   const pct=h.old?Math.abs(diff/h.old*100).toFixed(1):'0.0';
   let cards=`<div class="card old"><div class="k">As per old rates</div><div class="v">${inr(h.old)}</div></div>
-    <div class="card new"><div class="k">Payable under VISHWAS</div><div class="v">${inr(h.total)}</div></div>
+    <div class="card new"><div class="k">Payable under CoSS</div><div class="v">${inr(h.total)}</div></div>
     <div class="card ${isUp?'up':'save'}"><div class="k">${isUp?'Increase':'Reduction'}</div>
       <div class="v">${inr(Math.abs(diff))}</div><div class="sub2">${pct}% ${isUp?'higher':'lower'}</div></div>`;
   if(ar.length)cards+=`<div class="card mute"><div class="k">Auto-levy (excluded)</div><div class="v">${inr(ar.reduce((s,r)=>s+r.old.total,0))}</div><div class="sub2">${ar.length} record(s)</div></div>`;
@@ -475,12 +475,12 @@ function render(){
   const vr=rs.filter(r=>Math.abs(r.variance)>2);
   const vEl=document.getElementById('variance');
   if(!vr.length){
-    vEl.innerHTML=`<div class="note ok">Cross-check: recomputing every record under the pre-VISHWAS rules reproduces the figures in the uploaded summons exactly, so the rate basis used here matches EPFO's own calculation.</div>`;
+    vEl.innerHTML=`<div class="note ok">Cross-check: recomputing every record under the pre-CoSS rules reproduces the figures in the uploaded summons exactly, so the rate basis used here matches EPFO's own calculation.</div>`;
   }else{
     const tv=vr.reduce((s,r)=>s+r.variance,0);
     vEl.innerHTML=`<details class="var" open><summary>Cross-check: ${vr.length} record(s) differ from the figure printed in the summons (net ${tv>0?'+':''}${IN(tv)})</summary>
       <div class="body">
-        <p style="margin:0 0 6px">Each record below was recomputed under the <b>pre-VISHWAS</b> rules and compared with the amount actually printed in the uploaded summons. A difference usually means the summons was generated on a different apportionment of the delay, a revised due date, or rounding at a different stage. Review these before passing the order — this note appears here only and is never carried into the generated notice.</p>
+        <p style="margin:0 0 6px">Each record below was recomputed under the <b>pre-CoSS</b> rules and compared with the amount actually printed in the uploaded summons. A difference usually means the summons was generated on a different apportionment of the delay, a revised due date, or rounding at a different stage. Review these before passing the order — this note appears here only and is never carried into the generated notice.</p>
         <table><tr><th class="left">Wage Month</th><th>Delay</th><th class="left">Rate basis</th><th>Summons</th><th>Recomputed</th><th>Difference</th></tr>
         ${vr.map(r=>`<tr><td class="left">${r.wageMonth}</td><td>${r.delayDays}d</td>
           <td class="left">${r.detail.map(d=>d.days+'d @ '+d.rate+(d.seg==='post'?'%pm':'%pa')).join(' + ')}</td>
@@ -492,7 +492,7 @@ function render(){
 
   let t=`<thead><tr><th class="left">#</th><th class="left">Wage Month</th><th class="left">Due</th><th class="left">Paid</th>
     <th class="left">Delay</th><th class="left">Basis</th><th class="left">Rate applied</th><th>Contribution</th>
-    <th>Old dues</th><th>VISHWAS</th><th>Change</th></tr></thead><tbody>`;
+    <th>Old dues</th><th>CoSS</th><th>Change</th></tr></thead><tbody>`;
   let i=0;
   p.rows.forEach(r=>{
     const skip=excludeAuto()&&r.autoLevy; if(!skip)i++;
@@ -513,10 +513,10 @@ function render(){
 
   let fn='The revised notice is drafted under Section 128 of the Code on Social Security, 2020, which now governs levy of damages in place of Section 14B of the EPF & MP Act, 1952.';
   const sp=rs.filter(r=>r.basis==='split').length;
-  if(sp)fn+=' '+sp+' default(s) run across 14.06.2024; for these the delay is apportioned, with only the part falling on or after that date repriced under VISHWAS.';
+  if(sp)fn+=' '+sp+' default(s) run across 14.06.2024; for these the delay is apportioned, with only the part falling on or after that date repriced under CoSS.';
   if(isUp)fn+=' Note that the recalculated total exceeds the amount originally demanded — this arises where the graded rate for a segment is no lower than the rate previously applied.';
   if(ar.length)fn+=' Remittances already recovered by auto-levy are excluded, consistent with the "Total Amount of 14B Dues Payable" line of the source summons.';
-  if(p.q7Total)fn+=' Interest under Section 127 CoSS (formerly 7Q) is not recalculated — VISHWAS applies to damages only, and requires interest to be fully remitted before an application is made.';
+  if(p.q7Total)fn+=' Interest under Section 127 CoSS (formerly 7Q) is not recalculated — CoSS applies to damages only, and requires interest to be fully remitted before an application is made.';
   document.getElementById('footnote').textContent=fn;
 }
 
@@ -526,7 +526,7 @@ document.getElementById('btnXlsx').addEventListener('click',()=>{
   const p=PARSED, rs=activeRows(), ar=autoRows(), h=heads(rs);
   const A=[],M=[],NC=23;
   A.push(['ANNEXURE A']);
-  A.push(['Calculation of damages under Section 128 of the Code on Social Security, 2020 (formerly Section 14B of the EPF & MP Act, 1952) at VISHWAS, 2026 rates']);
+  A.push(['Calculation of damages under Section 128 of the Code on Social Security, 2020 (formerly Section 14B of the EPF & MP Act, 1952) at CoSS, 2026 rates']);
   A.push(['Establishment: '+(p.establishment||'')+'    |    Establishment ID: '+(p.estId||'')+
           '    |    File No: '+(p.fileNo||'')+'    |    Period: '+(p.period||'')]);
   A.push([]);
@@ -564,15 +564,15 @@ document.getElementById('btnXlsx').addEventListener('click',()=>{
   const put=(label,val)=>{const row=[];row[1]=label;row[12]=val;A.push(row);
     M.push({s:{r:A.length-1,c:1},e:{r:A.length-1,c:11}},{s:{r:A.length-1,c:12},e:{r:A.length-1,c:14}});};
   put('Total damages as per OLD rates (as issued in the 14B summons)',{f:`S${TR}`,v:h.old});
-  put('TOTAL DAMAGES PAYABLE under VISHWAS, 2026',{f:`R${TR}`,v:h.total});
-  put((h.total>h.old?'INCREASE':'Reduction')+' on account of VISHWAS, 2026',{f:`ABS(M${sr+1}-M${sr+2})`,v:Math.abs(h.old-h.total)});
+  put('TOTAL DAMAGES PAYABLE under CoSS, 2026',{f:`R${TR}`,v:h.total});
+  put((h.total>h.old?'INCREASE':'Reduction')+' on account of CoSS, 2026',{f:`ABS(M${sr+1}-M${sr+2})`,v:Math.abs(h.old-h.total)});
   if(ar.length)put('Damages already recovered by auto-levy ('+ar.length+' record(s), excluded above)',ar.reduce((s,r)=>s+r.old.total,0));
-  if(p.q7Total)put('Interest u/s 127 CoSS (formerly 7Q) — NOT affected by VISHWAS, payable in full',p.q7Total);
+  if(p.q7Total)put('Interest u/s 127 CoSS (formerly 7Q) — NOT affected by CoSS, payable in full',p.q7Total);
   A.push([]);
   A.push(['','Basis of computation']);
   [ '1. Where a default runs across a rate-change date (25.09.2008 or 14.06.2024), the period of delay is apportioned at that date. Each part carries the rate in force during it, and the slab for a part is determined by that part\'s own length.',
-    '2. For the part falling on or after 14.06.2024, VISHWAS, 2026 applies the graded rate — 0.25% (under 2 months), 0.50% (2 to under 4 months), 1.00% (4 months and above) — per month or part thereof, in place of the flat 1% per month.',
-    '3. For the part falling before 14.06.2024, the annual rate already applicable (5% / 10% / 15% / 25% p.a., or 17% / 22% / 27% / 37% p.a. before 25.09.2008) continues to apply, prorated by days / 365. VISHWAS does not alter this part.',
+    '2. For the part falling on or after 14.06.2024, CoSS, 2026 applies the graded rate — 0.25% (under 2 months), 0.50% (2 to under 4 months), 1.00% (4 months and above) — per month or part thereof, in place of the flat 1% per month.',
+    '3. For the part falling before 14.06.2024, the annual rate already applicable (5% / 10% / 15% / 25% p.a., or 17% / 22% / 27% / 37% p.a. before 25.09.2008) continues to apply, prorated by days / 365. CoSS does not alter this part.',
     '4. Because only the post-14.06.2024 part is repriced, a long-running default may show little reduction, and where the graded rate for that part is no lower than the rate previously applied the recalculated figure can exceed the amount originally demanded.',
     '5. Remittances already recovered by auto-levy are excluded from the amount demanded, consistent with the "Total Amount of 14B Dues Payable" line of the source summons.'
   ].forEach(t=>{A.push(['',t]);M.push({s:{r:A.length-1,c:1},e:{r:A.length-1,c:NC-1}});});
@@ -596,7 +596,7 @@ document.getElementById('btnXlsx').addEventListener('click',()=>{
   ws['!freeze']={xSplit:0,ySplit:S-1};
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Annexure A');
-  XLSX.writeFile(wb,(p.estId||'establishment')+'_Annexure_A_VISHWAS.xlsx');
+  XLSX.writeFile(wb,(p.estId||'establishment')+'_Annexure_A_CoSS.xlsx');
 });
 
 /* =================== NOTICE (Word / PDF) =================== */
@@ -657,7 +657,7 @@ td.c,th.c{text-align:center;} td.r{text-align:right;}
 <tr><td>4 months and above, and less than 6 months</td><td class="c">27%</td><td class="c">15%</td><td class="c">1%</td></tr>
 <tr><td>6 months and above</td><td class="c">37%</td><td class="c">25%</td><td class="c">1%</td></tr></table>
 <p>Whereas, the information available with EPFO records shows that the establishment has made belated remittances during the period <b>${p.period||'____________'}</b> and such remittances beyond the permissible period attract Penal Damages.</p>
-<p>And whereas, in terms of VISHWAS, 2026 notified vide G.S.R. 525(E) dated 29.06.2026, the rate of damages applicable from 14.06.2024 stands substituted by the graded rate set out in the table above. Where a default runs across 14.06.2024, the period of delay has been apportioned at that date, the part falling on or after 14.06.2024 being charged at the graded rate and the part falling before that date continuing at the rate already applicable to it.</p>
+<p>And whereas, in terms of CoSS, 2026 notified vide G.S.R. 525(E) dated 29.06.2026, the rate of damages applicable from 14.06.2024 stands substituted by the graded rate set out in the table above. Where a default runs across 14.06.2024, the period of delay has been apportioned at that date, the part falling on or after 14.06.2024 being charged at the graded rate and the part falling before that date continuing at the rate already applicable to it.</p>
 <p>The Penal Damages for such belated remittances, computed accordingly, are summarized as below:-</p>
 <table class="grid" style="width:82%;margin-left:auto;margin-right:auto;">
 <tr><th style="width:66%"></th><th>Amount of Damages payable in Rs.</th></tr>
@@ -668,7 +668,7 @@ td.c,th.c{text-align:center;} td.r{text-align:right;}
 <tr><td>EDLI Administration/Inspection charges in A/c no.22</td><td class="r">${IN(h.ac22)}</td></tr>
 <tr><td><b>Total damages payable</b></td><td class="r"><b>${IN(h.total)}</b></td></tr></table>
 ${ar.length?`<p><i>Note: Damages of Rs. ${IN(autoTot)} in respect of ${ar.length} remittance(s) already recovered by auto-levy have been excluded from the amount demanded above.</i></p>`:''}
-${p.q7Total?`<p><i>Note: Interest of Rs. ${IN(p.q7Total)} payable under Section 127 of the CoSS (formerly Section 7Q of the Act) is not affected by VISHWAS, 2026 and remains payable in full. The Scheme requires the entire interest to be remitted before an application is submitted.</i></p>`:''}
+${p.q7Total?`<p><i>Note: Interest of Rs. ${IN(p.q7Total)} payable under Section 127 of the CoSS (formerly Section 7Q of the Act) is not affected by CoSS, 2026 and remains payable in full. The Scheme requires the entire interest to be remitted before an application is submitted.</i></p>`:''}
 <p>Month wise and each remittance wise details of default are attached as Annexure-A to this notice, which may be referred to.</p>
 <p>In case the establishment/employer does not wish to make any representation and agrees with the details mentioned in the Annexure, you may remit the same through a Challan generated on the Unified Portal for employers by logging into the portal and using the Challan Entry option. It is further advised to enter the details in the fields provided for penal damages in the Challan format using the miscellaneous payment option.</p>
 <p>In case the establishment/employer has already made the payment of the Penal Damages specified above, a reply to the notice may be sent immediately quoting the reference number mentioned above with proof of such remittance.</p>
@@ -686,21 +686,21 @@ ${p.q7Total?`<p><i>Note: Interest of Rs. ${IN(p.q7Total)} payable under Section 
 <br style="page-break-before:always">
 <h1>Annexure - A</h1>
 <h2>Statement showing amounts payable under Section 128 of the Code on Social Security, 2020</h2>
-<p class="hdr small">(Belated remittances and calculation of payable damages at VISHWAS, 2026 rates)</p>
+<p class="hdr small">(Belated remittances and calculation of payable damages at CoSS, 2026 rates)</p>
 <br>
 <p class="n">Establishment ID : ${p.estId||''} &nbsp;&nbsp;&nbsp;&nbsp; Name of Establishment : ${p.establishment||''}</p>
 <p class="n">File No : ${p.fileNo||''} &nbsp;&nbsp;&nbsp;&nbsp; Period : ${p.period||''}</p>
 <table class="grid ann" width="100%">
 <tr><th>S.No</th><th>Month</th><th>Due Date /<br>Paid On</th><th>Delay<br>(days)</th>
 <th>Rate applied</th><th>Old<br>(Rs.)</th>
-<th>VISHWAS<br>(Rs.)</th><th>${isUp?'Increase':'Reduction'}<br>(Rs.)</th></tr>
+<th>CoSS<br>(Rs.)</th><th>${isUp?'Increase':'Reduction'}<br>(Rs.)</th></tr>
 ${ann}
 <tr><th colspan="5" style="text-align:right">Total</th><th class="r">${IN(h.old)}</th>
 <th class="r">${IN(h.total)}</th><th class="r">${IN(Math.abs(h.old-h.total))}</th></tr></table>
 <p class="n"><b>Basis of computation:</b></p>
 <p class="n small">(i) Where a default runs across a rate-change date (25.09.2008 or 14.06.2024), the period of delay has been apportioned at that date. Each part carries the rate in force during it, and the slab for a part is determined by that part's own length.</p>
-<p class="n small">(ii) For the part falling on or after 14.06.2024 — graded rate under VISHWAS, 2026: 0.25% per month for a part under 2 months, 0.50% for 2 to under 4 months, and 1.00% for 4 months and above, per month or part thereof.</p>
-<p class="n small">(iii) For the part falling before 14.06.2024 — the annual rate already applicable (5% / 10% / 15% / 25% per annum), prorated by days / 365. This part is not altered by VISHWAS, 2026.</p>
+<p class="n small">(ii) For the part falling on or after 14.06.2024 — graded rate under CoSS, 2026: 0.25% per month for a part under 2 months, 0.50% for 2 to under 4 months, and 1.00% for 4 months and above, per month or part thereof.</p>
+<p class="n small">(iii) For the part falling before 14.06.2024 — the annual rate already applicable (5% / 10% / 15% / 25% per annum), prorated by days / 365. This part is not altered by CoSS, 2026.</p>
 <p class="n small">(iv) Remittances already recovered by auto-levy are excluded from the amount demanded.</p>
 <br><br>
 <p class="sig"><b>Regional Provident Fund Commissioner-II</b></p>
@@ -713,7 +713,7 @@ document.getElementById('btnWord').addEventListener('click',()=>{
   const blob=new Blob(['\ufeff',buildNoticeHtml()],{type:'application/msword'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download=(PARSED.estId||'establishment')+'_Summons_128_VISHWAS.doc';
+  a.download=(PARSED.estId||'establishment')+'_Summons_128_CoSS.doc';
   a.click();
 });
 
@@ -753,7 +753,7 @@ document.getElementById('btnPdf').addEventListener('click',()=>{
     columnStyles:{0:{halign:'left'}},headStyles:{fillColor:[217,217,217],textColor:0,fontStyle:'bold',fontSize:8}});
   y=doc.lastAutoTable.finalY+16;
   para(`Whereas, the information available with EPFO records shows that the establishment has made belated remittances during the period ${p.period||'____________'} and such remittances beyond the permissible period attract Penal Damages.`);
-  para("And whereas, in terms of VISHWAS, 2026 notified vide G.S.R. 525(E) dated 29.06.2026, the rate of damages applicable from 14.06.2024 stands substituted by the graded rate set out above. Where a default runs across 14.06.2024, the period of delay has been apportioned at that date, the part falling on or after 14.06.2024 being charged at the graded rate and the part falling before that date continuing at the rate already applicable to it.");
+  para("And whereas, in terms of CoSS, 2026 notified vide G.S.R. 525(E) dated 29.06.2026, the rate of damages applicable from 14.06.2024 stands substituted by the graded rate set out above. Where a default runs across 14.06.2024, the period of delay has been apportioned at that date, the part falling on or after 14.06.2024 being charged at the graded rate and the part falling before that date continuing at the rate already applicable to it.");
   para("The Penal Damages for such belated remittances, computed accordingly, are summarized as below:-");
   doc.autoTable({startY:y,margin:{left:L,right:52},head:[['','Amount of Damages payable in Rs.']],
     body:[['EPF contributions in A/c no.1',IN(h.ac1)],['EPS contribution in A/c no.10',IN(h.ac10)],
@@ -767,7 +767,7 @@ document.getElementById('btnPdf').addEventListener('click',()=>{
     didParseCell:d=>{if(d.row.index===5)d.cell.styles.fontStyle='bold';}});
   y=doc.lastAutoTable.finalY+16;
   if(ar.length)para(`Note: Damages of Rs. ${IN(ar.reduce((s,r)=>s+r.old.total,0))} in respect of ${ar.length} remittance(s) already recovered by auto-levy have been excluded from the amount demanded above.`,{i:1,s:9.5});
-  if(p.q7Total)para(`Note: Interest of Rs. ${IN(p.q7Total)} payable under Section 127 of the CoSS (formerly Section 7Q) is not affected by VISHWAS, 2026 and remains payable in full.`,{i:1,s:9.5});
+  if(p.q7Total)para(`Note: Interest of Rs. ${IN(p.q7Total)} payable under Section 127 of the CoSS (formerly Section 7Q) is not affected by CoSS, 2026 and remains payable in full.`,{i:1,s:9.5});
   para("Month wise and each remittance wise details of default are attached as Annexure-A to this notice, which may be referred to.");
   para("In case the establishment/employer does not wish to make any representation and agrees with the details mentioned in the Annexure, you may remit the same through a Challan generated on the Unified Portal for employers, using the Challan Entry option, entering the details in the fields provided for penal damages under the miscellaneous payment option.");
   para("However, in case the establishment/employer intends to dispute the notice, in accordance with the first proviso to Section 128 of the Code on Social Security, 2020, the establishment/employer is entitled to an opportunity of being heard before the Penal Damages are levied, and may appear either in person or through a duly authorized representative before the undersigned on ____________ at __________.");
@@ -791,7 +791,7 @@ document.getElementById('btnPdf').addEventListener('click',()=>{
   lline("Annexure - A",{b:1,s:14});
   const aw=doc.getTextWidth("Annexure - A");doc.setLineWidth(.5);doc.line(LW/2-aw/2,y-13,LW/2+aw/2,y-13);
   lline("Statement showing amounts payable under Section 128 of the Code on Social Security, 2020",{b:1,s:9.5});
-  lline("(Belated remittances and calculation of payable damages at VISHWAS, 2026 rates)",{s:9,lh:17});
+  lline("(Belated remittances and calculation of payable damages at CoSS, 2026 rates)",{s:9,lh:17});
   doc.setFont('times','normal');doc.setFontSize(9.5);
   doc.text('Establishment ID : '+(p.estId||'')+'          Name of Establishment : '+(p.establishment||''),LL,y);y+=13;
   doc.text('File No : '+(p.fileNo||'')+'          Period : '+(p.period||''),LL,y);y+=10;
@@ -801,7 +801,7 @@ document.getElementById('btnPdf').addEventListener('click',()=>{
   body.push(['','','','','','Total',IN(rs.reduce((s,r)=>s+r.contrTotal,0)),IN(h.old),IN(h.total),IN(Math.abs(h.old-h.total))]);
   doc.autoTable({startY:y+6,margin:{left:LL,right:40},tableWidth:LTW,
     head:[['S.No','Wage Month','Due Date','Date of Payment','Delay (days)','Rate applied (apportioned)',
-           'Total Contribution (Rs.)','Damages as per old rates (Rs.)','Damages under VISHWAS (Rs.)',(isUp?'Increase':'Reduction')+' (Rs.)']],
+           'Total Contribution (Rs.)','Damages as per old rates (Rs.)','Damages under CoSS (Rs.)',(isUp?'Increase':'Reduction')+' (Rs.)']],
     body,styles:{font:'times',fontSize:7.6,cellPadding:3,lineColor:[0,0,0],lineWidth:.4,halign:'center',valign:'middle'},
     columnStyles:{0:{cellWidth:32},1:{cellWidth:58},2:{cellWidth:64},3:{cellWidth:70},4:{cellWidth:44},
                   5:{cellWidth:168,fontSize:7,halign:'left'},
@@ -813,14 +813,14 @@ document.getElementById('btnPdf').addEventListener('click',()=>{
   doc.setFont('times','bold');doc.setFontSize(9.5);doc.text('Basis of computation:',LL,y);y+=13;
   doc.setFont('times','normal');doc.setFontSize(8.5);
   [ "(i) Where a default runs across a rate-change date (25.09.2008 or 14.06.2024), the period of delay has been apportioned at that date. Each part carries the rate in force during it, and the slab for a part is determined by that part's own length.",
-    "(ii) For the part falling on or after 14.06.2024 — graded rate under VISHWAS, 2026: 0.25% per month for a part under 2 months, 0.50% for 2 to under 4 months, and 1.00% for 4 months and above, per month or part thereof.",
-    "(iii) For the part falling before 14.06.2024 — the annual rate already applicable (5% / 10% / 15% / 25% per annum), prorated by days / 365. This part is not altered by VISHWAS, 2026.",
+    "(ii) For the part falling on or after 14.06.2024 — graded rate under CoSS, 2026: 0.25% per month for a part under 2 months, 0.50% for 2 to under 4 months, and 1.00% for 4 months and above, per month or part thereof.",
+    "(iii) For the part falling before 14.06.2024 — the annual rate already applicable (5% / 10% / 15% / 25% per annum), prorated by days / 365. This part is not altered by CoSS, 2026.",
     "(iv) Remittances already recovered by auto-levy are excluded from the amount demanded."
   ].forEach(t=>{doc.splitTextToSize(t,LTW).forEach(s=>{if(y>545){doc.addPage('a4','landscape');y=52;}doc.text(s,LL,y);y+=11;});y+=3;});
   y+=24; if(y>510){doc.addPage('a4','landscape');y=70;}
   doc.setFont('times','bold');doc.text('Regional Provident Fund Commissioner-II',LR,y,{align:'right'});
   doc.setFont('times','normal');doc.text('EPFO: RO: SANGAREDDY',LR,y+13,{align:'right'});
-  doc.save((p.estId||'establishment')+'_Summons_128_VISHWAS.pdf');
+  doc.save((p.estId||'establishment')+'_Summons_128_CoSS.pdf');
 });
 </script>
 </body>
